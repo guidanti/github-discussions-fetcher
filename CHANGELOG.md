@@ -1,5 +1,11 @@
 # github-discussions-fetcher
 
+## 0.2.3
+
+### Patch Changes
+
+- 07360fd: Recreated deno.lock and bumped deno version
+
 ## 0.2.2
 
 ### Patch Changes
