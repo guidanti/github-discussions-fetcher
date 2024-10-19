@@ -8,7 +8,7 @@ await build({
   entryPoints: ["mod.ts"],
   outDir,
   shims: {
-    deno: false,
+    deno: true,
   },
   test: false,
   typeCheck: false,
