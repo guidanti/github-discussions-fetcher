@@ -1,5 +1,11 @@
 # github-discussions-fetcher
 
+## 0.2.2
+
+### Patch Changes
+
+- 0729b32: Shim deno to fix fs.ensure_symlink
+
 ## 0.2.1
 
 ### Patch Changes
