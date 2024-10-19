@@ -3,7 +3,7 @@ import { useGraphQL } from "../lib/useGraphQL.ts";
 import { useCache } from "../lib/useCache.ts";
 import { useEntries } from "../lib/useEntries.ts";
 import { Comment, Cursor } from "../types.ts";
-import chalk from "npm:chalk@5.3.0";
+import chalk from "npm:chalk@4.1.2";
 import { useLogger } from "../lib/useLogger.ts";
 
 /**

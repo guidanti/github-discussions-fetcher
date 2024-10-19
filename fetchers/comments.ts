@@ -2,7 +2,7 @@ import { type Operation } from "npm:effection@3.0.3";
 import { useGraphQL } from "../lib/useGraphQL.ts";
 import { useEntries } from "../lib/useEntries.ts";
 import { Cursor } from "../types.ts";
-import chalk from "npm:chalk@5.3.0";
+import chalk from "npm:chalk@4.1.2";
 import { useLogger } from "../lib/useLogger.ts";
 
 interface fetchCommentsOptions {
