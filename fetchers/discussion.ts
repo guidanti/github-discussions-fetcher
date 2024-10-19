@@ -4,7 +4,7 @@ import type { DiscussionsQuery } from "../__generated__/types.ts";
 import { useEntries } from "../lib/useEntries.ts";
 import { useGraphQL } from "../lib/useGraphQL.ts";
 import type { Cursor, CURSOR_VALUE } from "../types.ts";
-import chalk from "npm:chalk@5.3.0";
+import chalk from "npm:chalk@4.1.2";
 import { useLogger } from "../lib/useLogger.ts";
 
 interface fetchDiscussionOptions {

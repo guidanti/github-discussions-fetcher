@@ -3,7 +3,7 @@ import { encodeHex } from "jsr:@std/encoding@1";
 import { md5 } from "jsr:@takker/md5@0.1.0";
 import type { GraphQlQueryResponse } from "npm:@octokit/graphql@^4.8.0/dist-types/types.ts";
 import type { RequestParameters } from "npm:@octokit/types@13.6.1";
-import chalk from "npm:chalk@5.3.0";
+import chalk from "npm:chalk@4.1.2";
 import {
   call,
   createContext,
