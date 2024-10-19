@@ -18,7 +18,6 @@ import {
 } from "npm:graphql@16.8.2";
 import { useRetryWithBackoff } from "./useRetryWithBackoff.ts";
 
-import { ensureContext } from "./ensureContext.ts";
 import { type Cache, CacheContext, createPersistentCache, useCache } from "./useCache.ts";
 import { type CostTracker, useCost } from "./useCost.ts";
 import { Logger, useLogger } from "./useLogger.ts";
@@ -39,24 +38,22 @@ export function* initGraphQLContext(
 ): Operation<GraphQLQueryFunction> {
   const logger = yield* useLogger();
   const cost = yield* useCost();
+  const currentCache = yield* useCache();
 
-  return yield* ensureContext(
-    GraphQLContext,
-    call(function* () {
-      const currentCache = yield* useCache();
+  const fetchGithubGraphql = yield* call(function* () {
+    const cache = yield* CacheContext.set(createPersistentCache({
+      location: new URL("./github/", currentCache.location),
+    }));
+    
+    return createFetchGithubGraphql({
+      cache,
+      client,
+      logger,
+      cost,
+    });
+  });
 
-      const cache = yield* CacheContext.set(createPersistentCache({
-        location: new URL("./github/", currentCache.location),
-      }));
-      
-      return createFetchGithubGraphql({
-        cache,
-        client,
-        logger,
-        cost,
-      });
-    }),
-  );
+  return yield* GraphQLContext.set(fetchGithubGraphql);
 }
 
 export function* useGraphQL(): Operation<GraphQLQueryFunction> {
