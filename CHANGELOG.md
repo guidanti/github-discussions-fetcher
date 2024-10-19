@@ -1,5 +1,11 @@
 # github-discussions-fetcher
 
+## 0.2.1
+
+### Patch Changes
+
+- e778812: Allow passing logger into fetchGithubDiscussions
+
 ## 0.2.0
 
 ### Minor Changes
