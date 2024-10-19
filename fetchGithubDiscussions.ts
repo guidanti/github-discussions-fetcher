@@ -20,14 +20,26 @@ export interface FetchGithubDiscussionsOptions {
   discussionsBatchSize: number;
   commentsBatchSize: number;
   repliesBatchSize: number;
+  results: Queue<GithubDiscussionFetcherResult, void>;
+  logger: typeof console;
 }
 
-export function* fetchGithubDiscussions({ client, org, repo, discussionsBatchSize, commentsBatchSize, repliesBatchSize }: FetchGithubDiscussionsOptions): Operation<
-  Queue<GithubDiscussionFetcherResult, void>
-> {
+export function* fetchGithubDiscussions(
+  options: FetchGithubDiscussionsOptions,
+): Operation<void> {
+  const {
+    client,
+    org,
+    repo,
+    discussionsBatchSize,
+    commentsBatchSize,
+    repliesBatchSize,
+    results,
+  } = options;
+
   yield* initRetryWithBackoff();
 
-  const logger = yield* initLoggerContext(console);
+  const logger = yield* initLoggerContext(options.logger);
   const cost = yield* initCostContext();
   const cache = yield* initCacheContext({
     location: new URL(`./.cache/`, import.meta.url),
@@ -104,5 +116,5 @@ export function* fetchGithubDiscussions({ client, org, repo, discussionsBatchSiz
 
   logger.dir(cost.summary());
 
-  return yield* stitch();
+  yield* stitch({ results });
 }
