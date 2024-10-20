@@ -22,6 +22,7 @@ export interface FetchGithubDiscussionsOptions {
   repliesBatchSize: number;
   results: Queue<GithubDiscussionFetcherResult, void>;
   logger: typeof console;
+  cache?: URL;
 }
 
 export function* fetchGithubDiscussions(
@@ -42,7 +43,7 @@ export function* fetchGithubDiscussions(
   const logger = yield* initLoggerContext(options.logger);
   const cost = yield* initCostContext();
   const cache = yield* initCacheContext({
-    location: new URL(`./.cache/`, import.meta.url),
+    location: options.cache ?? new URL(`./.cache/`, import.meta.url),
   });
 
   yield* initGraphQLContext({ client });
