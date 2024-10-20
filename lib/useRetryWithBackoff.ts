@@ -1,6 +1,7 @@
 import { createContext, Operation, race, sleep } from "npm:effection@3.0.3";
 import { useLogger } from "./useLogger.ts";
 import { ensureContext } from "./ensureContext.ts";
+import { Duration, DateTime, Interval } from "npm:luxon@3.5.0";
 
 interface UseRetryBackoffOptions {
   timeout?: number;
@@ -29,6 +30,7 @@ export function* useRetryWithBackoff<T>(
   let attempt = -1;
 
   function* body() {
+    const expireTime = DateTime.now().plus(_options.timeout);
     while (true) {
       try {
         const result = yield* fn();
@@ -44,9 +46,11 @@ export function* useRetryWithBackoff<T>(
         // https://aws.amazon.com/ru/blogs/architecture/exponential-backoff-and-jitter/
         const backoff = Math.pow(2, attempt) * 1000;
         const delayMs = Math.round((backoff * (1 + Math.random())) / 2);
+        const seconds = Math.round(Duration.fromMillis(delayMs).as('seconds'));
+        const expireRemaining = Math.round(Interval.fromDateTimes(DateTime.now(), expireTime).length("seconds"));
 
         logger.log(
-          `Operation[${_options.operationName}] failed, will retry in ${delayMs} milliseconds.`,
+          `Operation[${_options.operationName}] failed, will retry in ${seconds || 1} ${seconds > 1 ? "seconds" : "second"}. ${expireRemaining} ${expireRemaining > 1 ? "seconds" : "second"} remaining.`,
         );
 
         yield* sleep(delayMs);
