@@ -12,11 +12,6 @@ export interface RetryWithContextDefaults {
   operationName: string;
 }
 
-export const DEFAULTS = {
-  timeout: 90000,
-  operationName: "Unknown",
-} as const;
-
 const RetryWithBackoffContext = createContext<RetryWithContextDefaults>(
   "retry-with-context",
 );
@@ -74,7 +69,7 @@ export function* useRetryWithBackoff<T>(
 }
 
 export function* initRetryWithBackoff(
-  defaults: RetryWithContextDefaults = DEFAULTS,
+  defaults: RetryWithContextDefaults,
 ) {
   // deno-lint-ignore require-yield
   function* init(): Operation<RetryWithContextDefaults> {
