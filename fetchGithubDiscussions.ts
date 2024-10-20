@@ -23,6 +23,7 @@ export interface FetchGithubDiscussionsOptions {
   results: Queue<GithubDiscussionFetcherResult, void>;
   logger: typeof console;
   cache?: URL;
+  timeout?: number;
 }
 
 export function* fetchGithubDiscussions(
@@ -36,9 +37,13 @@ export function* fetchGithubDiscussions(
     commentsBatchSize,
     repliesBatchSize,
     results,
+    timeout = 90_000,
   } = options;
 
-  yield* initRetryWithBackoff();
+  yield* initRetryWithBackoff({
+    timeout,
+    operationName: "Unknown",
+  });
 
   const logger = yield* initLoggerContext(options.logger);
   const cost = yield* initCostContext();
