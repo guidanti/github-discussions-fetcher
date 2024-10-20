@@ -1,5 +1,15 @@
 # github-discussions-fetcher
 
+## 0.3.0
+
+### Minor Changes
+
+- 951a179: Make timeout an argument
+
+### Patch Changes
+
+- 5e792a5: Allow passing cache destination as a path
+
 ## 0.2.3
 
 ### Patch Changes
