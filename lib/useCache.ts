@@ -1,4 +1,4 @@
-import { ensureFile, exists, walkSync } from "jsr:@std/fs@1.0.4";
+import { ensureFile, exists, walkSync, emptyDir } from "jsr:@std/fs@1.0.4";
 import { basename, dirname, globToRegExp, join } from "jsr:@std/path@1.0.6";
 import {
   call,
@@ -20,6 +20,7 @@ export interface Cache {
   read<T>(key: string): Operation<Stream<T, unknown>>;
   has(key: string): Operation<boolean>;
   find<T>(directory: string): Operation<Queue<T, unknown>>;
+  clear(): Operation<void>;
 }
 
 export const CacheContext = createContext<Cache>("cache");
@@ -124,5 +125,9 @@ class PersistantCache implements Cache {
     });
 
     return queue;
+  }
+
+  *clear() {
+    yield* call(() => emptyDir(this.location));
   }
 }
