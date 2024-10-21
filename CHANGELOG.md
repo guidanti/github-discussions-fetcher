@@ -1,5 +1,12 @@
 # github-discussions-fetcher
 
+## 0.5.0
+
+### Minor Changes
+
+- 922db2c: Create option for clearing cache
+  Log error when retrying
+
 ## 0.4.0
 
 ### Minor Changes
