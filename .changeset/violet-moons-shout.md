@@ -3,3 +3,4 @@
 ---
 
 Create option for clearing cache
+Log error when retrying
