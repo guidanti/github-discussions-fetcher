@@ -120,7 +120,9 @@ export function* fetchGithubDiscussions(
     first: repliesBatchSize,
   });
 
-  logger.dir(cost.summary());
+  const summary = cost.summary();
+  logger.log(`Total GraphQL cost for fetching all discussions: ${summary.cost}`);
+  logger.log(`Total number of queries: ${summary.queryCount}`);
 
   yield* stitch({ results });
 }
