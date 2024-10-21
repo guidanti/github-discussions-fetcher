@@ -24,6 +24,7 @@ export interface FetchGithubDiscussionsOptions {
   logger: typeof console;
   cache?: URL;
   timeout?: number;
+  clearCacheOnSuccess?: boolean;
 }
 
 export function* fetchGithubDiscussions(
@@ -38,6 +39,7 @@ export function* fetchGithubDiscussions(
     repliesBatchSize,
     results,
     timeout = 90_000,
+    clearCacheOnSuccess = true,
   } = options;
 
   yield* initRetryWithBackoff({
@@ -125,4 +127,9 @@ export function* fetchGithubDiscussions(
   logger.log(`Total number of queries: ${summary.queryCount}`);
 
   yield* stitch({ results });
+  
+  if (clearCacheOnSuccess) {
+    logger.log(`Clearing cache`);
+    yield* cache.clear();
+  }
 }

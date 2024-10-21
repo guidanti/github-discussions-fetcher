@@ -29,7 +29,8 @@ if (import.meta.main) {
         commentsBatchSize: 100,
         repliesBatchSize: 100,
         results,
-        logger: console
+        logger: console,
+        clearCacheOnSuccess: false,
       });
       results.close();
     });
