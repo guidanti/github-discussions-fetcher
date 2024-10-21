@@ -1,5 +1,11 @@
 # github-discussions-fetcher
 
+## 0.4.0
+
+### Minor Changes
+
+- ffe5920: Output remaining seconds of timeout and display next attempt in seconds
+
 ## 0.3.0
 
 ### Minor Changes
