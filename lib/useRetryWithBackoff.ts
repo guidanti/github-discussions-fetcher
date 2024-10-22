@@ -1,8 +1,7 @@
 import { createContext, Operation, race, sleep } from "npm:effection@3.0.3";
 import { useLogger } from "./useLogger.ts";
 import { ensureContext } from "./ensureContext.ts";
-// @deno-types="npm:@types/luxon@3.4.2"
-import { Duration } from "npm:luxon@3.5.0";
+import moment from "npm:moment@2.30.1";
 
 interface UseRetryBackoffOptions {
   timeout?: number;
@@ -49,7 +48,7 @@ export function* useRetryWithBackoff<T>(
         
         logger.debug(e);
         logger.log(
-          `Operation[${_options.operationName}] failed, will retry in ${Duration.fromMillis(delayMs).toHuman()}.`
+          `Operation[${_options.operationName}] failed, will retry in ${moment.duration(delayMs).humanize()}.`
         );
 
         yield* sleep(delayMs);
