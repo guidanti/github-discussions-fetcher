@@ -18,11 +18,13 @@
     "npm:@graphql-codegen/typescript@4": "4.1.0_graphql@16.9.0",
     "npm:@octokit/graphql-schema@^11.1.0": "11.2.0_graphql@16.9.0",
     "npm:@octokit/graphql@^4.8.0": "4.8.0",
+    "npm:@octokit/types@13.6.1": "13.6.1",
     "npm:@types/node@^22.7.4": "22.7.5",
     "npm:chalk@4.1.2": "4.1.2",
     "npm:effection@3.0.3": "3.0.3",
     "npm:graphql@16.8.2": "16.8.2",
     "npm:luxon@3.5.0": "3.5.0",
+    "npm:moment@2.30.1": "2.30.1",
     "npm:typescript@^5.6.2": "5.6.3"
   },
   "jsr": {
@@ -1255,7 +1257,7 @@
     "@octokit/endpoint@6.0.12": {
       "integrity": "sha512-lF3puPwkQWGfkMClXb4k/eUT/nZKQfxinRWJrdZaJO85Dqwo/G0yOC434Jr2ojwafWJMYqFGFa5ms4jJUgujdA==",
       "dependencies": [
-        "@octokit/types",
+        "@octokit/types@6.41.0",
         "is-plain-object",
         "universal-user-agent"
       ]
@@ -1271,17 +1273,20 @@
       "integrity": "sha512-0gv+qLSBLKF0z8TKaSKTsS39scVKF9dbMxJpj3U0vC7wjNWFuIpL/z76Qe2fiuCbDRcJSavkXsVtMS6/dtQQsg==",
       "dependencies": [
         "@octokit/request",
-        "@octokit/types",
+        "@octokit/types@6.41.0",
         "universal-user-agent"
       ]
     },
     "@octokit/openapi-types@12.11.0": {
       "integrity": "sha512-VsXyi8peyRq9PqIz/tpqiL2w3w80OgVMwBHltTml3LmVvXiphgeqmY9mvBw9Wu7e0QWk/fqD37ux8yP5uVekyQ=="
     },
+    "@octokit/openapi-types@22.2.0": {
+      "integrity": "sha512-QBhVjcUa9W7Wwhm6DBFu6ZZ+1/t/oYxqc2tp81Pi41YNuJinbFRx8B133qVOrAaBbF7D/m0Et6f9/pZt9Rc+tg=="
+    },
     "@octokit/request-error@2.1.0": {
       "integrity": "sha512-1VIvgXxs9WHSjicsRwq8PlR2LR2x6DwsJAaFgzdi0JfJoGSO8mYI/cHJQ+9FbN21aa+DrgNLnwObmyeSC8Rmpg==",
       "dependencies": [
-        "@octokit/types",
+        "@octokit/types@6.41.0",
         "deprecation",
         "once"
       ]
@@ -1291,16 +1296,22 @@
       "dependencies": [
         "@octokit/endpoint",
         "@octokit/request-error",
-        "@octokit/types",
+        "@octokit/types@6.41.0",
         "is-plain-object",
         "node-fetch",
         "universal-user-agent"
       ]
     },
+    "@octokit/types@13.6.1": {
+      "integrity": "sha512-PHZE9Z+kWXb23Ndik8MKPirBPziOc0D2/3KH1P+6jK5nGWe96kadZuE4jev2/Jq7FvIfTlT2Ltg8Fv2x1v0a5g==",
+      "dependencies": [
+        "@octokit/openapi-types@22.2.0"
+      ]
+    },
     "@octokit/types@6.41.0": {
       "integrity": "sha512-eJ2jbzjdijiL3B4PrSQaSjuF2sPEQPVCPzBvTHJD9Nz+9dw2SGH4K4xeQJ77YfTq5bRQ+bD8wT11JbeDPmxmGg==",
       "dependencies": [
-        "@octokit/openapi-types"
+        "@octokit/openapi-types@12.11.0"
       ]
     },
     "@parcel/watcher-android-arm64@2.4.1": {
@@ -2419,6 +2430,9 @@
       "dependencies": [
         "brace-expansion@2.0.1"
       ]
+    },
+    "moment@2.30.1": {
+      "integrity": "sha512-uEmtNhbDOrWPFS+hdjFCBfy9f2YoyzRpwcl+DqpC6taX21FzsTLQVbMV/W7PzNSX6x/bhC1zA3c2UQ5NzH6how=="
     },
     "mri@1.2.0": {
       "integrity": "sha512-tzzskb3bG8LvYGFF/mDTpq3jpI6Q9wc3LEmBaghu+DdCssd1FakN7Bc0hVNmEyGq1bq3RgfkCb3cmQLpNPOroA=="
