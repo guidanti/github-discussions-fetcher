@@ -1,5 +1,11 @@
 # github-discussions-fetcher
 
+## 0.6.0
+
+### Minor Changes
+
+- cdb41d5: Use moment to humanize log
+
 ## 0.5.0
 
 ### Minor Changes
