@@ -9,7 +9,7 @@ import {
   spawn,
   type Stream,
   stream,
-} from "npm:effection@3.0.3";
+} from "npm:effection@4.0.0-alpha.1";
 
 import { ensureContext } from "./ensureContext.ts";
 import { JSONLinesParseStream } from './jsonlines/parser.ts';
@@ -40,7 +40,7 @@ export function* initCacheContext(options: InitCacheContextOptions) {
 }
 
 export function* useCache(): Operation<Cache> {
-  return yield* CacheContext;
+  return yield* CacheContext.expect();
 }
 
 export function createPersistentCache(options: InitCacheContextOptions): Cache {

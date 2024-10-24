@@ -1,5 +1,5 @@
 import { assert } from "jsr:@std/assert";
-import { createQueue, main, spawn } from "npm:effection@3.0.3";
+import { createQueue, main, spawn } from "npm:effection@4.0.0-alpha.1";
 import { fetchGithubDiscussions } from "./fetchGithubDiscussions.ts";
 import { forEach } from "./lib/forEach.ts";
 import { createGithubGraphqlClient } from "./lib/useGraphQL.ts";

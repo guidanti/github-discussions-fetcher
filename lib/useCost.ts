@@ -1,7 +1,7 @@
 import {
   createContext,
   Operation,
-} from "npm:effection@3.0.3";
+} from "npm:effection@4.0.0-alpha.1";
 import { ensureContext } from "./ensureContext.ts";
 
 interface CostEntries {
@@ -61,5 +61,5 @@ export function* initCostContext() {
 }
 
 export function* useCost(): Operation<Cost> {
-  return yield* CostContext;
+  return yield* CostContext.expect();
 }

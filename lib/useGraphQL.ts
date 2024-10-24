@@ -10,7 +10,7 @@ import {
   each,
   type Operation,
   useAbortSignal,
-} from "npm:effection@3.0.3";
+} from "npm:effection@4.0.0-alpha.1";
 import {
   DocumentNode,
   type OperationDefinitionNode,

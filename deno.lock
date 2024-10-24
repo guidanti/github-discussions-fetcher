@@ -22,6 +22,7 @@
     "npm:@types/node@^22.7.4": "22.7.5",
     "npm:chalk@4.1.2": "4.1.2",
     "npm:effection@3.0.3": "3.0.3",
+    "npm:effection@4.0.0-alpha.1": "4.0.0-alpha.1",
     "npm:graphql@16.8.2": "16.8.2",
     "npm:luxon@3.5.0": "3.5.0",
     "npm:moment@2.30.1": "2.30.1",
@@ -1885,6 +1886,9 @@
     },
     "effection@3.0.3": {
       "integrity": "sha512-9ASCaJ44flDoEKUUJtn9drfIomn2z30sZUw7//crbq+eltMu09AyILcouXwpMkcHR8TsD5hDvTTsOLHswWRxXQ=="
+    },
+    "effection@4.0.0-alpha.1": {
+      "integrity": "sha512-2OjTlOVfz3jVDApBsdC/OVsZ5zmla7uYHRdc7OrxxMx7D6S6EapLfxaR4kJGD1VSZbnrHn/Er2/1PZWMLzrP0w=="
     },
     "electron-to-chromium@1.5.36": {
       "integrity": "sha512-HYTX8tKge/VNp6FGO+f/uVDmUkq+cEfcxYhKf15Akc4M5yxt5YmorwlAitKWjWhWQnKcDRBAQKXkhqqXMqcrjw=="

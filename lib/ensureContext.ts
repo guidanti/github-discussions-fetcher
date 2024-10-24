@@ -1,4 +1,4 @@
-import type { Context as ContextType, Operation } from "npm:effection@3.0.3";
+import type { Context as ContextType, Operation } from "npm:effection@4.0.0-alpha.1";
 
 function isMissingContextError(
   error: unknown,
@@ -8,12 +8,8 @@ function isMissingContextError(
 }
 
 export function* ensureContext<T>(Context: ContextType<T>, init: Operation<T>) {
-  try {
-    return yield* Context;
-  } catch (e) {
-    if (isMissingContextError(e)) {
-      return yield* Context.set(yield* init);
-    }
-    throw e;
+  if (!(yield* Context.get())) {
+    yield* Context.set(yield* init);
   }
+  return yield* Context.expect();
 }

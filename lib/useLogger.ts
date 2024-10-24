@@ -1,4 +1,4 @@
-import { createContext, Operation } from "npm:effection@3.0.3";
+import { createContext, Operation } from "npm:effection@4.0.0-alpha.1";
 import { ensureContext } from "./ensureContext.ts";
 
 export type Logger = typeof console;
@@ -21,5 +21,5 @@ export function* initLoggerContext(logger: Console): Operation<Console> {
 }
 
 export function* useLogger(): Operation<Console> {
-  return yield* LoggerContext;
+  return yield* LoggerContext.expect();
 }

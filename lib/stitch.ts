@@ -1,4 +1,4 @@
-import { type Operation, type Queue } from "npm:effection@3.0.3";
+import { type Operation, type Queue } from "npm:effection@4.0.0-alpha.1";
 import { DiscussionEntries, GithubDiscussionFetcherResult } from "../types.ts";
 import { useCache } from "./useCache.ts";
 import { useLogger } from "./useLogger.ts";

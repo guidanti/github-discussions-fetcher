@@ -4,7 +4,7 @@ import {
   createContext,
   Operation,
   resource,
-} from "npm:effection@3.0.3";
+} from "npm:effection@4.0.0-alpha.1";
 import { DiscussionEntries } from "../types.ts";
 
 export const EntriesContext = createContext<Channel<DiscussionEntries, void>>(
@@ -33,5 +33,5 @@ export function* initEntriesContext(): Operation<
 }
 
 export function* useEntries(): Operation<Channel<DiscussionEntries, void>> {
-  return yield* EntriesContext;
+  return yield* EntriesContext.expect();
 }
