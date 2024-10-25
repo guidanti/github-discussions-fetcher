@@ -18,46 +18,63 @@ import {
 } from "npm:graphql@16.8.2";
 import { useRetryWithBackoff } from "./useRetryWithBackoff.ts";
 
-import { type Cache, CacheContext, createPersistentCache, useCache } from "./useCache.ts";
+import {
+  type Cache,
+  CacheContext,
+  createPersistentCache,
+  useCache,
+} from "./useCache.ts";
 import { type CostTracker, useCost } from "./useCost.ts";
 import { Logger, useLogger } from "./useLogger.ts";
 
-type GraphQLQueryFunction = <ResponseData>(
-  query: string,
-  parameters?: RequestParameters,
-) => Operation<ResponseData>;
-
-export const GraphQLContext = createContext<GraphQLQueryFunction>("graphql");
+export const GraphQLContext =
+  createContext<
+    <ResponseData>(
+      query: string,
+      parameters?: RequestParameters,
+    ) => Operation<ResponseData>
+  >("graphql");
 
 interface InitGraphQLContextOptions {
   client: GithubGraphqlClient;
 }
 
-export function* initGraphQLContext(
-  { client }: InitGraphQLContextOptions,
-): Operation<GraphQLQueryFunction> {
+export function* initGraphQLContext({
+  client,
+}: InitGraphQLContextOptions): Operation<
+  <ResponseData>(
+    query: string,
+    parameters?: RequestParameters,
+  ) => Operation<ResponseData>
+> {
   const logger = yield* useLogger();
   const cost = yield* useCost();
   const currentCache = yield* useCache();
 
-  const fetchGithubGraphql = yield* call(function* () {
-    const cache = yield* CacheContext.set(createPersistentCache({
-      location: new URL("./github/", currentCache.location),
-    }));
-    
-    return createFetchGithubGraphql({
-      cache,
-      client,
-      logger,
-      cost,
-    });
+  const githubCache = createPersistentCache({
+    location: new URL("./github/", currentCache.location),
   });
+
+  const fetchGithubGraphql = yield* CacheContext.with(
+    githubCache,
+    function* () {
+      return createFetchGithubGraphql({
+        cache: githubCache,
+        client,
+        logger,
+        cost,
+      });
+    },
+  );
 
   return yield* GraphQLContext.set(fetchGithubGraphql);
 }
 
-export function* useGraphQL(): Operation<GraphQLQueryFunction> {
-  return yield* GraphQLContext;
+export function* useGraphQL(): Operation<<ResponseData>(
+  query: string,
+  parameters?: RequestParameters,
+) => Operation<ResponseData>> {
+  return yield* GraphQLContext.expect();
 }
 
 interface CreateFetchGithubGraphql {
@@ -67,22 +84,23 @@ interface CreateFetchGithubGraphql {
   cost: CostTracker;
 }
 
-function createFetchGithubGraphql(
-  { cache, client, logger, cost }: CreateFetchGithubGraphql,
-) {
+function createFetchGithubGraphql({
+  cache,
+  client,
+  logger,
+  cost,
+}: CreateFetchGithubGraphql) {
   return function* query<ResponseData>(
     query: string,
     parameters: RequestParameters = {},
   ): Operation<ResponseData> {
     const operationName = getOperationName(parse(query));
-    const key = `${encodeHex(md5(query))}-${
-      Object.keys(parameters).map((p) => `${p}:${parameters[p]}`).join("-")
-    }`;
+    const key = `${encodeHex(md5(query))}-${Object.keys(parameters)
+      .map((p) => `${p}:${parameters[p]}`)
+      .join("-")}`;
 
     if (yield* cache.has(key)) {
-      for (
-        const data of yield* each(yield* cache.read<ResponseData>(key))
-      ) {
+      for (const data of yield* each(yield* cache.read<ResponseData>(key))) {
         return data;
       }
       logger.error(`This could happen if cached document had no records.`);
@@ -90,24 +108,28 @@ function createFetchGithubGraphql(
     } else {
       let data: ResponseData | undefined;
 
-      yield* useRetryWithBackoff(function* () {
-        data = yield* client<ResponseData>({
-          query,
-          variables: parameters,
-        });
-      }, {
-        operationName,
-      });
+      yield* useRetryWithBackoff(
+        function* () {
+          data = yield* client<ResponseData>({
+            query,
+            variables: parameters,
+          });
+        },
+        {
+          operationName,
+        },
+      );
 
       // @ts-expect-error Property 'rateLimit' does not exist on type 'NonNullable<ResponseData>'.
       if (data?.rateLimit) {
         logger.info(
-          `GitHub API Query ${operationName} with ${JSON
-              .stringify(parameters)
+          `GitHub API Query ${operationName} with ${
+            JSON.stringify(parameters)
             // @ts-expect-error Property 'rateLimit' does not exist on type 'NonNullable<ResponseData>'.
           } ${chalk.green("cost", data.rateLimit.cost)} and ${
             // @ts-expect-error Property 'rateLimit' does not exist on type 'NonNullable<ResponseData>'.
-            chalk.green("remaining", data.rateLimit.remaining)}`,
+            chalk.green("remaining", data.rateLimit.remaining)
+          }`,
         );
         cost.update({
           // @ts-expect-error Property 'rateLimit' does not exist on type 'NonNullable<ResponseData>'.deno-ts(2339)
@@ -136,12 +158,17 @@ export type GithubGraphqlClient = <ResponseData>(
   options: GithubGraphqlClientOptions,
 ) => Operation<ResponseData>;
 
-export function createGithubGraphqlClient(
-  { token, endpoint }: { token?: string; endpoint: string },
-): GithubGraphqlClient {
-  return function* githubGraphqlClient<ResponseData>(
-    { query, variables }: GithubGraphqlClientOptions,
-  ): Operation<ResponseData> {
+export function createGithubGraphqlClient({
+  token,
+  endpoint,
+}: {
+  token?: string;
+  endpoint: string;
+}): GithubGraphqlClient {
+  return function* githubGraphqlClient<ResponseData>({
+    query,
+    variables,
+  }: GithubGraphqlClientOptions): Operation<ResponseData> {
     const logger = yield* useLogger();
     const signal = yield* useAbortSignal();
 
@@ -158,18 +185,18 @@ export function createGithubGraphqlClient(
           variables,
         }),
         signal,
-      })
+      }),
     );
     if (response.ok) {
       const payload = yield* call<GraphQlQueryResponse<ResponseData>>(() =>
-        response.json()
+        response.json(),
       );
       if (payload.errors) {
         for (const error of payload.errors ?? []) {
           logger.error(
-            `${getOperationName(parse(query))} with ${
-              JSON.stringify(variables)
-            } encountered an error ${JSON.stringify(error)}`,
+            `${getOperationName(parse(query))} with ${JSON.stringify(
+              variables,
+            )} encountered an error ${JSON.stringify(error)}`,
           );
         }
       }

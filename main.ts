@@ -25,7 +25,7 @@ if (import.meta.main) {
         client,
         org: "vercel",
         repo: "next.js",
-        discussionsBatchSize: 100,
+        discussionsBatchSize: 50,
         commentsBatchSize: 100,
         repliesBatchSize: 100,
         results,

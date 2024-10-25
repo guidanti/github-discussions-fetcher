@@ -48,7 +48,7 @@ export function* useRetryWithBackoff<T>(
         
         logger.debug(e);
         logger.log(
-          `Operation[${_options.operationName}] failed, will retry in ${moment.duration(delayMs).humanize()}.`
+          `Operation[${_options.operationName}] failed, will retry in ${moment.duration(delayMs).humanize({ s: 1, m: 1 })}.`
         );
 
         yield* sleep(delayMs);

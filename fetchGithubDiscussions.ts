@@ -38,7 +38,7 @@ export function* fetchGithubDiscussions(
     commentsBatchSize,
     repliesBatchSize,
     results,
-    timeout = 90_000,
+    timeout = 360_000,
     clearCacheOnSuccess = true,
   } = options;
 
