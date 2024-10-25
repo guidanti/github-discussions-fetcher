@@ -4,6 +4,7 @@ import { useEntries } from "../lib/useEntries.ts";
 import { Cursor } from "../types.ts";
 import chalk from "npm:chalk@4.1.2";
 import { useLogger } from "../lib/useLogger.ts";
+import type { Node } from "../__generated__/types.ts";
 
 interface fetchCommentsOptions {
   incompleteComments: Cursor[];
@@ -66,29 +67,31 @@ export function* fetchComments({
 
     let commentsCount = 0;
     for (const [_, discussion] of Object.entries(data)) {
-      if (discussion.comments.pageInfo.hasNextPage) {
-        cursors.push({
-          id: discussion.id,
-          first,
-          endCursor: discussion.comments.pageInfo.endCursor,
-        });
-      }
-      commentsCount += discussion.comments.nodes.length;
-      for (const comment of discussion.comments.nodes) {
-        if (comment?.author) {
-          yield* entries.send({
-            type: "comment",
-            id: comment.id,
-            bodyText: comment.bodyText,
-            author: comment.author.login,
-            discussionNumber: comment.discussion.number,
+      if (discussion) {
+        if (discussion.comments.pageInfo.hasNextPage) {
+          cursors.push({
+            id: discussion.id,
+            first,
+            endCursor: discussion.comments.pageInfo.endCursor,
           });
-        } else {
-          logger.log(
-            chalk.gray(`Skipped comment:${comment?.id} because author login is missing.`),
-          );
         }
-      };
+        commentsCount += discussion.comments.nodes.length;
+        for (const comment of discussion.comments.nodes) {
+          if (comment?.author) {
+            yield* entries.send({
+              type: "comment",
+              id: comment.id,
+              bodyText: comment.bodyText,
+              author: comment.author.login,
+              discussionNumber: comment.discussion.number,
+            });
+          } else {
+            logger.log(
+              chalk.gray(`Skipped comment:${comment?.id} because author login is missing.`),
+            );
+          }
+        };
+      }
     }
     logger.log(
       `Retrieved ${chalk.blue(commentsCount, commentsCount > 1 ? "comments" : "comment")} from batch query`,
@@ -122,5 +125,5 @@ type DiscussionsBatchQuery = {
         }
       }[];
     }
-  }
+  } | null;
 } & RateLimit; // 🚨
