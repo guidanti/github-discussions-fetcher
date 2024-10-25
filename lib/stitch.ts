@@ -1,8 +1,7 @@
-import { type Operation, type Queue } from "npm:effection@4.0.0-alpha.2";
+import { each, type Operation, type Queue } from "npm:effection@4.0.0-alpha.2";
 import { DiscussionEntries, GithubDiscussionFetcherResult } from "../types.ts";
 import { useCache } from "./useCache.ts";
 import { useLogger } from "./useLogger.ts";
-import { forEach } from "./forEach.ts";
 
 export function* stitch(
   { results }: { results: Queue<GithubDiscussionFetcherResult, void> },
@@ -12,13 +11,13 @@ export function* stitch(
   const cache = yield* useCache();
   const logger = yield* useLogger();
 
-  const discussions = yield* cache.find<DiscussionEntries>(
-    "discussions/*",
-  );
-
   let result: GithubDiscussionFetcherResult | undefined;
 
-  yield* forEach(function* (item) {
+  for (
+    const item of yield* each(cache.find<DiscussionEntries>(
+      "discussions/*",
+    ))
+  ) {
     switch (item.type) {
       case "discussion": {
         if (result && result.number !== item.number) {
@@ -65,7 +64,8 @@ export function* stitch(
         break;
       }
     }
-  }, discussions);
+    yield* each.next();
+  }
 
   if (result) {
     results.add(result);

@@ -1,11 +1,10 @@
-import { type Operation } from "npm:effection@4.0.0-alpha.2";
+import { each, type Operation } from "npm:effection@4.0.0-alpha.2";
 import { useGraphQL } from "../lib/useGraphQL.ts";
 import { useCache } from "../lib/useCache.ts";
 import { useEntries } from "../lib/useEntries.ts";
 import { Comment, Cursor } from "../types.ts";
 import chalk from "npm:chalk@4.1.2";
 import { useLogger } from "../lib/useLogger.ts";
-import { forEach } from "../lib/forEach.ts";
 
 /**
  * This function fetches all of the replies for existing comments by fetching replies for each comment.
@@ -16,7 +15,7 @@ import { forEach } from "../lib/forEach.ts";
  * with remaining replies.
  */
 export function* fetchReplies({
-  first
+  first,
 }: {
   first: number;
 }): Operation<void> {
@@ -24,9 +23,7 @@ export function* fetchReplies({
 
   let cursors: Cursor[] = [];
 
-  const comments = yield* cache.find<Comment>("discussions/*/*");
-
-  yield* forEach(function*(comment) {
+  for (const comment of yield* each(cache.find<Comment>("discussions/*/*"))) {
     cursors.push({
       id: comment.id,
       first,
@@ -35,8 +32,9 @@ export function* fetchReplies({
     if (cursors.length >= first) {
       cursors = yield* fetchReplyCursors({ cursors, first });
     }
-  }, comments);
-  
+    yield* each.next();
+  }
+
   // fetched remaining cursors (assume it'll be less than 50)
   do {
     cursors = yield* fetchReplyCursors({ cursors, first });

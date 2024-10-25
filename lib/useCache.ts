@@ -5,7 +5,7 @@ import {
   createContext,
   createQueue,
   type Operation,
-  Queue,
+  Subscription,
   spawn,
   type Stream,
   stream,
@@ -20,7 +20,7 @@ export interface Cache {
   write(key: string, data: unknown): Operation<void>;
   read<T>(key: string): Operation<Stream<T, unknown>>;
   has(key: string): Operation<boolean>;
-  find<T>(directory: string): Operation<Queue<T, unknown>>;
+  find<T>(directory: string): Stream<T, void>;
   clear(): Operation<void>;
 }
 
@@ -88,7 +88,7 @@ class PersistantCache implements Cache {
     }
   }
 
-  *find<T>(glob: string): Operation<Queue<T, void>> {
+  *find<T>(glob: string): Stream<T, void> {
     const queue = createQueue<T, void>();
 
     const reg = globToRegExp(`${this.location.pathname}/${glob}`, {
@@ -118,7 +118,7 @@ class PersistantCache implements Cache {
           queue.add(item);
           yield* each.next();
         }
-        
+
         yield* each.next();
       }
 
