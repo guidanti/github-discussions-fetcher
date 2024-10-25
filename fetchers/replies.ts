@@ -1,4 +1,4 @@
-import { type Operation } from "npm:effection@4.0.0-alpha.1";
+import { type Operation } from "npm:effection@4.0.0-alpha.2";
 import { useGraphQL } from "../lib/useGraphQL.ts";
 import { useCache } from "../lib/useCache.ts";
 import { useEntries } from "../lib/useEntries.ts";

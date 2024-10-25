@@ -9,7 +9,7 @@ import {
   spawn,
   type Stream,
   stream,
-} from "npm:effection@4.0.0-alpha.1";
+} from "npm:effection@4.0.0-alpha.2";
 
 import { ensureContext } from "./ensureContext.ts";
 import { JSONLinesParseStream } from './jsonlines/parser.ts';

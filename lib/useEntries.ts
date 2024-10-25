@@ -4,7 +4,7 @@ import {
   createContext,
   Operation,
   resource,
-} from "npm:effection@4.0.0-alpha.1";
+} from "npm:effection@4.0.0-alpha.2";
 import { DiscussionEntries } from "../types.ts";
 
 export const EntriesContext = createContext<Channel<DiscussionEntries, void>>(

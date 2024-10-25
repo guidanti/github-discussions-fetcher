@@ -1,4 +1,4 @@
-import { type Operation, type Queue} from "npm:effection@4.0.0-alpha.1";
+import { type Operation, type Queue} from "npm:effection@4.0.0-alpha.2";
 
 export function* forEach<T>(
   op: (item: T) => Operation<void>,

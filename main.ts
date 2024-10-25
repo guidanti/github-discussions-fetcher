@@ -1,5 +1,5 @@
 import { assert } from "jsr:@std/assert";
-import { createQueue, main, spawn } from "npm:effection@4.0.0-alpha.1";
+import { createQueue, main, spawn } from "npm:effection@4.0.0-alpha.2";
 import { fetchGithubDiscussions } from "./fetchGithubDiscussions.ts";
 import { forEach } from "./lib/forEach.ts";
 import { createGithubGraphqlClient } from "./lib/useGraphQL.ts";
@@ -25,7 +25,7 @@ if (import.meta.main) {
         client,
         org: "vercel",
         repo: "next.js",
-        discussionsBatchSize: 50,
+        discussionsBatchSize: 100,
         commentsBatchSize: 100,
         repliesBatchSize: 100,
         results,

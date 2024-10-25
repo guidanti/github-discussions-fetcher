@@ -1,4 +1,4 @@
-import { call, type Operation, resource } from "npm:effection@4.0.0-alpha.1";
+import { call, type Operation, resource } from "npm:effection@4.0.0-alpha.2";
 
 export type JsonWriter = (data: unknown) => Operation<void>
 
