@@ -4,7 +4,6 @@ import { useEntries } from "../lib/useEntries.ts";
 import { Cursor } from "../types.ts";
 import chalk from "npm:chalk@4.1.2";
 import { useLogger } from "../lib/useLogger.ts";
-import type { Node } from "../__generated__/types.ts";
 
 interface fetchCommentsOptions {
   incompleteComments: Cursor[];
