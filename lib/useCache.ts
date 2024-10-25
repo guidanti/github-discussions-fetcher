@@ -1,4 +1,4 @@
-import { ensureFile, exists, walkSync, emptyDir } from "jsr:@std/fs@1.0.4";
+import { ensureFile, exists, walk, emptyDir } from "jsr:@std/fs@1.0.4";
 import { basename, dirname, globToRegExp, join } from "jsr:@std/path@1.0.6";
 import {
   call,
@@ -9,6 +9,7 @@ import {
   spawn,
   type Stream,
   stream,
+  each,
 } from "npm:effection@4.0.0-alpha.2";
 
 import { ensureContext } from "./ensureContext.ts";
@@ -94,7 +95,7 @@ class PersistantCache implements Cache {
       globstar: true,
     });
 
-    const files = walkSync(this.location, {
+    const files = walk(this.location, {
       includeDirs: false,
       includeFiles: true,
       match: [
@@ -106,19 +107,19 @@ class PersistantCache implements Cache {
     const read = this.read.bind(this);
 
     yield* spawn(function* () {
-      for (const file of files) {
+      for (const file of yield* each(stream(files))) {
         const key = join(
           dirname(file.path.replace(location.pathname, "")),
           basename(file.name, ".jsonl"),
         );
-        const items = yield* read<T>(key);
 
-        const subscription = yield* items;
-        let next = yield* subscription.next();
-        while (!next.done) {
-          queue.add(next.value);
-          next = yield* subscription.next();
+        const items = yield* read<T>(key);
+        for (const item of yield* each(items)) {
+          queue.add(item);
+          yield* each.next();
         }
+        
+        yield* each.next();
       }
 
       queue.close();
