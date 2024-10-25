@@ -1,5 +1,6 @@
 import { assert } from "jsr:@std/assert";
 import { createQueue, main, spawn } from "npm:effection@4.0.0-alpha.2";
+import byteSize from "npm:byte-size@9.0.0";
 import { fetchGithubDiscussions } from "./fetchGithubDiscussions.ts";
 import { forEach } from "./lib/forEach.ts";
 import { createGithubGraphqlClient } from "./lib/useGraphQL.ts";
@@ -39,6 +40,8 @@ if (import.meta.main) {
       console.log(result);
     }, results);
 
-    console.log("Done ✅");
+    const memory = Deno.memoryUsage();
+
+    console.log(`Done ✅; Used ${byteSize(memory.rss)} of memory.`);
   });
 }
