@@ -1,5 +1,11 @@
 # github-discussions-fetcher
 
+## 0.7.0
+
+### Minor Changes
+
+- df88c3a: Upgrade effection to v4
+
 ## 0.6.0
 
 ### Minor Changes
