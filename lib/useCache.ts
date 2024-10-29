@@ -1,15 +1,16 @@
-import { ensureFile, exists, walkSync, emptyDir } from "jsr:@std/fs@1.0.4";
+import { ensureFile, exists, walk, emptyDir } from "jsr:@std/fs@1.0.4";
 import { basename, dirname, globToRegExp, join } from "jsr:@std/path@1.0.6";
 import {
   call,
   createContext,
   createQueue,
   type Operation,
-  Queue,
+  Subscription,
   spawn,
   type Stream,
   stream,
-} from "npm:effection@3.0.3";
+  each,
+} from "npm:effection@4.0.0-alpha.2";
 
 import { ensureContext } from "./ensureContext.ts";
 import { JSONLinesParseStream } from './jsonlines/parser.ts';
@@ -19,7 +20,7 @@ export interface Cache {
   write(key: string, data: unknown): Operation<void>;
   read<T>(key: string): Operation<Stream<T, unknown>>;
   has(key: string): Operation<boolean>;
-  find<T>(directory: string): Operation<Queue<T, unknown>>;
+  find<T>(directory: string): Stream<T, void>;
   clear(): Operation<void>;
 }
 
@@ -40,7 +41,7 @@ export function* initCacheContext(options: InitCacheContextOptions) {
 }
 
 export function* useCache(): Operation<Cache> {
-  return yield* CacheContext;
+  return yield* CacheContext.expect();
 }
 
 export function createPersistentCache(options: InitCacheContextOptions): Cache {
@@ -87,14 +88,14 @@ class PersistantCache implements Cache {
     }
   }
 
-  *find<T>(glob: string): Operation<Queue<T, void>> {
+  *find<T>(glob: string): Stream<T, void> {
     const queue = createQueue<T, void>();
 
     const reg = globToRegExp(`${this.location.pathname}/${glob}`, {
       globstar: true,
     });
 
-    const files = walkSync(this.location, {
+    const files = walk(this.location, {
       includeDirs: false,
       includeFiles: true,
       match: [
@@ -106,19 +107,19 @@ class PersistantCache implements Cache {
     const read = this.read.bind(this);
 
     yield* spawn(function* () {
-      for (const file of files) {
+      for (const file of yield* each(stream(files))) {
         const key = join(
           dirname(file.path.replace(location.pathname, "")),
           basename(file.name, ".jsonl"),
         );
-        const items = yield* read<T>(key);
 
-        const subscription = yield* items;
-        let next = yield* subscription.next();
-        while (!next.done) {
-          queue.add(next.value);
-          next = yield* subscription.next();
+        const items = yield* read<T>(key);
+        for (const item of yield* each(items)) {
+          queue.add(item);
+          yield* each.next();
         }
+
+        yield* each.next();
       }
 
       queue.close();

@@ -1,7 +1,14 @@
 import { assert } from "jsr:@std/assert";
-import { createQueue, main, spawn } from "npm:effection@3.0.3";
+import {
+  createQueue,
+  each,
+  main,
+  type Operation,
+  spawn,
+  type Subscription,
+} from "npm:effection@4.0.0-alpha.2";
+import byteSize from "npm:byte-size@9.0.0";
 import { fetchGithubDiscussions } from "./fetchGithubDiscussions.ts";
-import { forEach } from "./lib/forEach.ts";
 import { createGithubGraphqlClient } from "./lib/useGraphQL.ts";
 import type { GithubDiscussionFetcherResult } from "./types.ts";
 
@@ -20,7 +27,7 @@ if (import.meta.main) {
       token,
     });
 
-    yield* spawn(function*() {
+    yield* spawn(function* () {
       yield* fetchGithubDiscussions({
         client,
         org: "vercel",
@@ -35,10 +42,24 @@ if (import.meta.main) {
       results.close();
     });
 
-    yield* forEach(function* (result) {
-      console.log(result);
-    }, results);
+    // deno-lint-ignore require-yield
+    function* createResultsSubscription(): Operation<
+      Subscription<GithubDiscussionFetcherResult, void>
+    > {
+      return results;
+    }
 
-    console.log("Done ✅");
+    for (
+      const result of yield* each(
+        createResultsSubscription(),
+      )
+    ) {
+      console.log(result);
+      yield* each.next();
+    }
+
+    const memory = Deno.memoryUsage();
+
+    console.log(`Done ✅; Used ${byteSize(memory.rss)} of memory.`);
   });
 }

@@ -1,4 +1,4 @@
-import { each, type Operation, type Queue, spawn } from "npm:effection@3.0.3";
+import { each, type Operation, type Queue, spawn } from "npm:effection@4.0.0-alpha.2";
 import { fetchDiscussions } from "./fetchers/discussion.ts";
 import { initCacheContext } from "./lib/useCache.ts";
 import { GithubGraphqlClient, initGraphQLContext } from "./lib/useGraphQL.ts";
@@ -38,7 +38,7 @@ export function* fetchGithubDiscussions(
     commentsBatchSize,
     repliesBatchSize,
     results,
-    timeout = 90_000,
+    timeout = 360_000,
     clearCacheOnSuccess = true,
   } = options;
 

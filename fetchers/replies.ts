@@ -1,4 +1,4 @@
-import { type Operation } from "npm:effection@3.0.3";
+import { each, type Operation } from "npm:effection@4.0.0-alpha.2";
 import { useGraphQL } from "../lib/useGraphQL.ts";
 import { useCache } from "../lib/useCache.ts";
 import { useEntries } from "../lib/useEntries.ts";
@@ -15,7 +15,7 @@ import { useLogger } from "../lib/useLogger.ts";
  * with remaining replies.
  */
 export function* fetchReplies({
-  first
+  first,
 }: {
   first: number;
 }): Operation<void> {
@@ -23,10 +23,7 @@ export function* fetchReplies({
 
   let cursors: Cursor[] = [];
 
-  const subscription = yield* cache.find<Comment>("discussions/*/*");
-  let next = yield* subscription.next();
-  while (!next.done) {
-    const comment = next.value;
+  for (const comment of yield* each(cache.find<Comment>("discussions/*/*"))) {
     cursors.push({
       id: comment.id,
       first,
@@ -35,8 +32,9 @@ export function* fetchReplies({
     if (cursors.length >= first) {
       cursors = yield* fetchReplyCursors({ cursors, first });
     }
-    next = yield* subscription.next();
+    yield* each.next();
   }
+
   // fetched remaining cursors (assume it'll be less than 50)
   do {
     cursors = yield* fetchReplyCursors({ cursors, first });
@@ -69,7 +67,7 @@ type CommentsBatchQuery = {
         };
       }[];
     };
-  };
+  } | null;
 } & RateLimit; // 🚨
 
 function* fetchReplyCursors(
@@ -122,29 +120,31 @@ function* fetchReplyCursors(
   delete data.rateLimit;
 
   for (const [_, comment] of Object.entries(data)) {
-    if (comment.replies.pageInfo.hasNextPage) {
-      newCursors.push({
-        id: comment.id,
-        first,
-        endCursor: comment.replies.pageInfo.endCursor,
-      });
-    }
-    for (const reply of comment.replies.nodes) {
-      if (reply?.author) {
-        yield* entries.send({
-          type: "reply",
-          id: reply.id,
-          bodyText: reply.bodyText,
-          author: reply.author.login,
-          parentCommentId: comment.id,
-          discussionNumber: reply.discussion.number,
+    if (comment) {
+      if (comment.replies.pageInfo.hasNextPage) {
+        newCursors.push({
+          id: comment.id,
+          first,
+          endCursor: comment.replies.pageInfo.endCursor,
         });
-      } else {
-        logger.log(
-          chalk.gray(
-            `Skipped comment:${comment?.id} because author login is missing.`,
-          ),
-        );
+      }
+      for (const reply of comment.replies.nodes) {
+        if (reply?.author) {
+          yield* entries.send({
+            type: "reply",
+            id: reply.id,
+            bodyText: reply.bodyText,
+            author: reply.author.login,
+            parentCommentId: comment.id,
+            discussionNumber: reply.discussion.number,
+          });
+        } else {
+          logger.log(
+            chalk.gray(
+              `Skipped comment:${comment?.id} because author login is missing.`,
+            ),
+          );
+        }
       }
     }
   }

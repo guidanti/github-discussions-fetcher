@@ -1,4 +1,4 @@
-import type { Scope, Queue } from "npm:effection@3.0.3";
+import type { Scope, Queue } from "npm:effection@4.0.0-alpha.2";
 
 export function toAsyncIterable<T>(queue: Queue<T, unknown>, scope: Scope): AsyncIterable<T> {
   return {

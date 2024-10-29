@@ -1,4 +1,4 @@
-import { createContext, Operation, race, sleep } from "npm:effection@3.0.3";
+import { createContext, Operation, race, sleep } from "npm:effection@4.0.0-alpha.2";
 import { useLogger } from "./useLogger.ts";
 import { ensureContext } from "./ensureContext.ts";
 import moment from "npm:moment@2.30.1";
@@ -22,7 +22,7 @@ export function* useRetryWithBackoff<T>(
   options: UseRetryBackoffOptions,
 ): Operation<void> {
   const logger = yield* useLogger();
-  const defaults = yield* RetryWithBackoffContext;
+  const defaults = yield* RetryWithBackoffContext.expect();
   const _options = {
     ...defaults,
     ...options,
@@ -48,7 +48,7 @@ export function* useRetryWithBackoff<T>(
         
         logger.debug(e);
         logger.log(
-          `Operation[${_options.operationName}] failed, will retry in ${moment.duration(delayMs).humanize()}.`
+          `Operation[${_options.operationName}] failed, will retry in ${moment.duration(delayMs).humanize({ s: 1, m: 1 })}.`
         );
 
         yield* sleep(delayMs);
