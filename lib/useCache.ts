@@ -37,8 +37,8 @@ export function* initCacheContext(options: InitCacheContextOptions) {
   try {
     yield* call(() => ensureDir(options.location));
   } catch (e) {
-    logger.error(`Could not create cache directory ${location}`)
-    throw e;  
+    logger.error(`Could not create cache directory ${options.location}`)
+    throw e;
   }
   
   // deno-lint-ignore require-yield
