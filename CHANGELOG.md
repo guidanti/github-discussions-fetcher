@@ -1,5 +1,11 @@
 # github-discussions-fetcher
 
+## 0.7.1
+
+### Patch Changes
+
+- 1ca55f5: Ensure cache directory exists
+
 ## 0.7.0
 
 ### Minor Changes
