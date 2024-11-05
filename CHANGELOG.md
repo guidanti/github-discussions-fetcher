@@ -1,5 +1,11 @@
 # github-discussions-fetcher
 
+## 0.7.2
+
+### Patch Changes
+
+- a2d9bc1: Bump effection to alpha.3
+
 ## 0.7.1
 
 ### Patch Changes
