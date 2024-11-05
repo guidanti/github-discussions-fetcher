@@ -1,7 +1,7 @@
 import {
   createContext,
   Operation,
-} from "npm:effection@4.0.0-alpha.2";
+} from "npm:effection@4.0.0-alpha.3";
 import { ensureContext } from "./ensureContext.ts";
 
 interface CostEntries {
