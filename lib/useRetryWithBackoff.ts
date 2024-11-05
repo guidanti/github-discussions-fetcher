@@ -1,4 +1,4 @@
-import { createContext, Operation, race, sleep } from "npm:effection@4.0.0-alpha.2";
+import { createContext, Operation, race, sleep } from "npm:effection@4.0.0-alpha.3";
 import { useLogger } from "./useLogger.ts";
 import { ensureContext } from "./ensureContext.ts";
 import moment from "npm:moment@2.30.1";
