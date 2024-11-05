@@ -1,4 +1,4 @@
-import { ensureFile, exists, walk, emptyDir, ensureDir } from "jsr:@std/fs@1.0.4";
+import { ensureFile, exists, walk, emptyDir } from "jsr:@std/fs@1.0.4";
 import { basename, dirname, globToRegExp, join } from "jsr:@std/path@1.0.6";
 import {
   call,
@@ -13,7 +13,6 @@ import {
 
 import { ensureContext } from "./ensureContext.ts";
 import { JSONLinesParseStream } from './jsonlines/parser.ts';
-import { useLogger } from "./useLogger.ts";
 
 export interface Cache {
   location: URL;
@@ -31,16 +30,6 @@ interface InitCacheContextOptions {
 }
 
 export function* initCacheContext(options: InitCacheContextOptions) {
-
-  const logger = yield* useLogger();
-
-  try {
-    yield* call(() => ensureDir(options.location));
-  } catch (e) {
-    logger.error(`Could not create cache directory ${options.location}`)
-    throw e;
-  }
-  
   // deno-lint-ignore require-yield
   function* init() {
     return new PersistantCache(options.location);
@@ -63,7 +52,13 @@ class PersistantCache implements Cache {
   *has(key: string) {
     const location = new URL(`./${key}.jsonl`, this.location);
 
-    return yield* call(() => exists(location));
+    return yield* call(async () => {
+      try {
+        return await exists(location);
+      } catch {
+        return false;
+      };
+    });
   }
 
   *read<T>(key: string) {

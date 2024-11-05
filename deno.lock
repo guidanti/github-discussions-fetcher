@@ -37,6 +37,7 @@
     "npm:@octokit/graphql-schema@^11.1.0": "11.2.0_graphql@16.9.0",
     "npm:@octokit/graphql@^4.8.0": "4.8.0",
     "npm:@octokit/types@13.6.1": "13.6.1",
+    "npm:@types/node@*": "22.5.4",
     "npm:@types/node@^22.7.4": "22.7.5",
     "npm:byte-size@9.0.0": "9.0.0",
     "npm:chalk@4.1.2": "4.1.2",
