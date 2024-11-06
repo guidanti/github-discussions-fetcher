@@ -1,5 +1,12 @@
 # github-discussions-fetcher
 
+## 0.7.3
+
+### Patch Changes
+
+- 27ceeb6: Fix bug in catch block of useCache
+  Revert ensureDir
+
 ## 0.7.2
 
 ### Patch Changes
