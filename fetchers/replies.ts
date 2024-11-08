@@ -36,9 +36,9 @@ export function* fetchReplies({
   }
 
   // fetched remaining cursors (assume it'll be less than 50)
-  do {
+  while (cursors.length > 0) {
     cursors = yield* fetchReplyCursors({ cursors, first });
-  } while (cursors.length > 0);
+  };
 }
 
 interface RateLimit {
