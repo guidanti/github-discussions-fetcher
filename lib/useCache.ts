@@ -1,4 +1,4 @@
-import { ensureFile, exists, walk, emptyDir } from "jsr:@std/fs@1.0.4";
+import { exists, walk, emptyDir } from "jsr:@std/fs@1.0.4";
 import { basename, dirname, globToRegExp, join } from "jsr:@std/path@1.0.6";
 import {
   call,
@@ -10,6 +10,7 @@ import {
   stream,
   each,
 } from "npm:effection@4.0.0-alpha.3";
+import { mkdirSync, writeFileSync, existsSync } from 'node:fs';
 
 import { ensureContext } from "./ensureContext.ts";
 import { JSONLinesParseStream } from './jsonlines/parser.ts';
@@ -75,7 +76,12 @@ class PersistantCache implements Cache {
 
   *write(key: string, data: unknown) {
     const location = new URL(`./${key}.jsonl`, this.location);
-    yield* call(() => ensureFile(location));
+    if (!existsSync(dirname(location.pathname))) {
+      mkdirSync(dirname(location.pathname), { recursive: true });
+    }
+    if (!existsSync(location)) {
+      writeFileSync(location.pathname, "");
+    }
 
     const file = yield* call(() =>
       Deno.open(location, {
