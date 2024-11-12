@@ -1,5 +1,11 @@
 # github-discussions-fetcher
 
+## 0.7.4
+
+### Patch Changes
+
+- 121ed20: Replace jsr:@std ensureFile with node fs and rearrange while loop to eliminate unnecessary trigger
+
 ## 0.7.3
 
 ### Patch Changes
