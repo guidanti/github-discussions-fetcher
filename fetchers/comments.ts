@@ -20,7 +20,7 @@ export function* fetchComments({
 
   let cursors: Cursor[] = incompleteComments;
 
-  do {
+  while (cursors.length > 0) {
     logger.log(
       `Batch querying ${chalk.blue(cursors.length, cursors.length > 1 ? "discussions" : "discussion")} for additional comments`,
     );
@@ -95,7 +95,7 @@ export function* fetchComments({
     logger.log(
       `Retrieved ${chalk.blue(commentsCount, commentsCount > 1 ? "comments" : "comment")} from batch query`,
     );
-  } while (cursors.length > 0);
+  };
 }
 
 interface RateLimit {

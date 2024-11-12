@@ -1,4 +1,4 @@
-import { ensureFile, exists, walk, emptyDir } from "jsr:@std/fs@1.0.4";
+import { exists, walk, emptyDir } from "jsr:@std/fs@1.0.4";
 import { basename, dirname, globToRegExp, join } from "jsr:@std/path@1.0.6";
 import {
   call,
@@ -10,9 +10,27 @@ import {
   stream,
   each,
 } from "npm:effection@4.0.0-alpha.3";
+import fs from 'node:fs';
+import { promisify } from 'node:util';
 
 import { ensureContext } from "./ensureContext.ts";
 import { JSONLinesParseStream } from './jsonlines/parser.ts';
+
+function* mkdir(path: fs.PathLike, options: fs.MakeDirectoryOptions & {
+  recursive: true;
+}): Operation<string | undefined> {
+  return yield* call(() => promisify(fs.mkdir)(path, options));
+}
+
+function* writeFile(file: fs.PathOrFileDescriptor,
+  data: string | NodeJS.ArrayBufferView,
+  options?: fs.WriteFileOptions): Operation<void> {
+  return yield* call(() => promisify(fs.writeFile)(file, data, options));
+}
+
+function* stat(path: fs.PathLike, options?: fs.StatOptions): Operation<fs.Stats | fs.BigIntStats> {
+  return yield* call(() => promisify(fs.stat)(path, options));
+}
 
 export interface Cache {
   location: URL;
@@ -75,7 +93,14 @@ class PersistantCache implements Cache {
 
   *write(key: string, data: unknown) {
     const location = new URL(`./${key}.jsonl`, this.location);
-    yield* call(() => ensureFile(location));
+
+    yield* mkdir(dirname(location.pathname), { recursive: true });
+    
+    try {
+      yield* stat(location.pathname);
+    } catch {
+      yield* writeFile(location.pathname, "");
+    }
 
     const file = yield* call(() =>
       Deno.open(location, {
