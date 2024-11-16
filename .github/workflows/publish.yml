@@ -37,6 +37,7 @@ jobs:
 
       - name: Publish
         run: npm publish --access=public
+        continue-on-error: true
         working-directory: ./packages/github-discussions-fetcher/build/npm
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
