@@ -6,7 +6,7 @@ on:
       - main
 
 jobs:
-  release-fetcher:
+  publish-fetcher:
     runs-on: ubuntu-latest
     defaults:
       run:
@@ -37,6 +37,7 @@ jobs:
 
       - name: Publish
         run: npm publish --access=public
-        working-directory: ./build/npm
+        continue-on-error: true
+        working-directory: ./packages/github-discussions-fetcher/build/npm
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}

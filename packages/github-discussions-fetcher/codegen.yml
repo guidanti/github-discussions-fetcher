@@ -1,5 +1,5 @@
 overwrite: true
-schema: ./node_modules/@octokit/graphql-schema/schema.graphql
+schema: ../../node_modules/@octokit/graphql-schema/schema.graphql
 documents:
   - ./**/!(*.__generated__).ts
 generates:
