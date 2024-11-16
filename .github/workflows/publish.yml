@@ -6,8 +6,11 @@ on:
       - main
 
 jobs:
-  release:
+  release-fetcher:
     runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: ./packages/github-discussions-fetcher
     steps:
       - name: Checkout
         uses: actions/checkout@v3
