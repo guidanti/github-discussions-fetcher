@@ -1,5 +1,5 @@
 import { build, emptyDir } from "jsr:@deno/dnt@0.41.3";
-import pkgJson from "../../../package.json" with { type: "json" };
+import pkgJson from "../package.json" with { type: "json" };
 
 const outDir = "./build/npm";
 await emptyDir(outDir);
