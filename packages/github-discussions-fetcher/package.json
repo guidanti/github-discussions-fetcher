@@ -1,0 +1,28 @@
+{
+  "name": "github-discussions-fetcher",
+  "version": "0.7.4",
+  "author": "Min Kim <min@guidanti.com>",
+  "license": "ISC",
+  "type": "module",
+  "scripts": {
+    "generate": "graphql-codegen --config codegen.yml"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/guidanti/graphql-github-discussions.git"
+  },
+  "bugs": {
+    "url": "https://github.com/guidanti/graphql-github-discussions/issues"
+  },
+  "dependencies": {
+    "@graphql-codegen/cli": "^4.0.0",
+    "@graphql-codegen/near-operation-file-preset": "^2.4.1",
+    "@graphql-codegen/typescript": "^4.0.0",
+    "@graphql-codegen/typescript-document-nodes": "^4.0.0",
+    "@graphql-codegen/typescript-operations": "^2.5.3",
+    "@octokit/graphql": "^4.8.0",
+    "@octokit/graphql-schema": "^11.1.0",
+    "@types/node": "^22.7.4",
+    "typescript": "^5.6.2"
+  }
+}
