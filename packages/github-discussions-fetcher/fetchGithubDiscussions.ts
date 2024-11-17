@@ -1,4 +1,4 @@
-import { each, type Operation, type Queue, spawn } from "npm:effection@4.0.0-alpha.3";
+import { each, type Operation, type Queue, spawn, sleep } from "npm:effection@4.0.0-alpha.3";
 import { fetchDiscussions } from "./fetchers/discussion.ts";
 import { initCacheContext } from "./lib/useCache.ts";
 import { GithubGraphqlClient, initGraphQLContext } from "./lib/useGraphQL.ts";
@@ -79,7 +79,7 @@ export function* fetchGithubDiscussions(
               key,
               item,
             );
-            yield* cache.write(
+            yield* cache.append(
               `/discussions/${item?.discussionNumber}`,
               item,
             );
@@ -95,7 +95,7 @@ export function* fetchGithubDiscussions(
               key,
               item,
             );
-            yield* cache.write(
+            yield* cache.append(
               `/discussions/${item?.discussionNumber}`,
               item,
             );
@@ -112,6 +112,7 @@ export function* fetchGithubDiscussions(
     repo,
     first: discussionsBatchSize,
   });
+
 
   yield* fetchComments({
     incompleteComments,

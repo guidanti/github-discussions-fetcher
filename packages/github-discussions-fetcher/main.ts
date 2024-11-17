@@ -28,17 +28,21 @@ if (import.meta.main) {
     });
 
     yield* spawn(function* () {
-      yield* fetchGithubDiscussions({
-        client,
-        org: "vercel",
-        repo: "next.js",
-        discussionsBatchSize: 100,
-        commentsBatchSize: 100,
-        repliesBatchSize: 100,
-        results,
-        logger: console,
-        clearCacheOnSuccess: false,
-      });
+      try {
+        yield* fetchGithubDiscussions({
+          client,
+          org: "guidanti",
+          repo: "github-discussions-fetcher",
+          discussionsBatchSize: 100,
+          commentsBatchSize: 100,
+          repliesBatchSize: 100,
+          results,
+          logger: console,
+          clearCacheOnSuccess: false,
+        });
+      } catch (e) {
+        console.error(`Error occurred while fetchingGithubDiscussions ${e}`)
+      }
       results.close();
     });
 

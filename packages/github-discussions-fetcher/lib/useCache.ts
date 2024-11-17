@@ -1,40 +1,49 @@
-import { exists, walk, emptyDir } from "jsr:@std/fs@1.0.4";
+import { emptyDir, exists, walk } from "jsr:@std/fs@1.0.4";
 import { basename, dirname, globToRegExp, join } from "jsr:@std/path@1.0.6";
 import {
   call,
   createContext,
   createQueue,
+  each,
   type Operation,
   spawn,
   type Stream,
   stream,
-  each,
 } from "npm:effection@4.0.0-alpha.3";
-import fs from 'node:fs';
-import { promisify } from 'node:util';
+import fs from "node:fs";
+import { promisify } from "node:util";
 
 import { ensureContext } from "./ensureContext.ts";
-import { JSONLinesParseStream } from './jsonlines/parser.ts';
+import { JSONLinesParseStream } from "./jsonlines/parser.ts";
 
-function* mkdir(path: fs.PathLike, options: fs.MakeDirectoryOptions & {
-  recursive: true;
-}): Operation<string | undefined> {
+function* mkdir(
+  path: fs.PathLike,
+  options: fs.MakeDirectoryOptions & {
+    recursive: true;
+  },
+): Operation<string | undefined> {
   return yield* call(() => promisify(fs.mkdir)(path, options));
 }
 
-function* writeFile(file: fs.PathOrFileDescriptor,
+function* writeFile(
+  file: fs.PathOrFileDescriptor,
   data: string | NodeJS.ArrayBufferView,
-  options?: fs.WriteFileOptions): Operation<void> {
+  options?: fs.WriteFileOptions,
+): Operation<void> {
   return yield* call(() => promisify(fs.writeFile)(file, data, options));
 }
 
-function* stat(path: fs.PathLike, options?: fs.StatOptions): Operation<fs.Stats | fs.BigIntStats> {
+function* stat(
+  path: fs.PathLike,
+  options?: fs.StatOptions,
+): Operation<fs.Stats | fs.BigIntStats> {
   return yield* call(() => promisify(fs.stat)(path, options));
 }
 
 export interface Cache {
   location: URL;
   write(key: string, data: unknown): Operation<void>;
+  append(key: string, data: unknown): Operation<void>;
   read<T>(key: string): Operation<Stream<T, unknown>>;
   has(key: string): Operation<boolean>;
   find<T>(directory: string): Stream<T, void>;
@@ -52,7 +61,7 @@ export function* initCacheContext(options: InitCacheContextOptions) {
   function* init() {
     return new PersistantCache(options.location);
   }
-  
+
   return yield* ensureContext(CacheContext, init());
 }
 
@@ -61,7 +70,7 @@ export function* useCache(): Operation<Cache> {
 }
 
 export function createPersistentCache(options: InitCacheContextOptions): Cache {
-  return new PersistantCache(options.location)
+  return new PersistantCache(options.location);
 }
 
 class PersistantCache implements Cache {
@@ -75,7 +84,7 @@ class PersistantCache implements Cache {
         return await exists(location);
       } catch {
         return false;
-      };
+      }
     });
   }
 
@@ -83,19 +92,38 @@ class PersistantCache implements Cache {
     const location = new URL(`./${key}.jsonl`, this.location);
     const file = yield* call(() => Deno.open(location, { read: true }));
 
-    const lines = file
-      .readable
-      .pipeThrough(new TextDecoderStream())
-      .pipeThrough(new JSONLinesParseStream());
+    return stream(
+      file
+        .readable
+        .pipeThrough(new TextDecoderStream())
+        .pipeThrough(new JSONLinesParseStream())
+        .values({ preventCancel: true }) as AsyncIterableIterator<T>,
+    );
+  }
 
-    return stream(lines as ReadableStream<T>);
+  *append(key: string, data: unknown) {
+    const location = new URL(`./${key}.jsonl`, this.location);
+
+    const file = yield* call(() =>
+      Deno.open(location, {
+        append: true,
+      })
+    );
+
+    try {
+      yield* call(() =>
+        file.write(new TextEncoder().encode(`${JSON.stringify(data)}\n`))
+      );
+    } finally {
+      file.close();
+    }
   }
 
   *write(key: string, data: unknown) {
     const location = new URL(`./${key}.jsonl`, this.location);
 
     yield* mkdir(dirname(location.pathname), { recursive: true });
-    
+
     try {
       yield* stat(location.pathname);
     } catch {
@@ -104,7 +132,8 @@ class PersistantCache implements Cache {
 
     const file = yield* call(() =>
       Deno.open(location, {
-        append: true,
+        create: true,
+        write: true
       })
     );
 
