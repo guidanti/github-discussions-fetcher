@@ -1,6 +1,7 @@
 {
   "version": "4",
   "specifiers": {
+    "jsr:@std/assert@*": "1.0.3",
     "jsr:@std/assert@1.0.3": "1.0.3",
     "jsr:@std/encoding@1": "1.0.5",
     "jsr:@std/fs@1.0.4": "1.0.4",
@@ -3044,11 +3045,6 @@
       ]
     },
     "members": {
-      "packages/backstage-github-discussions-fetcher": {
-        "dependencies": [
-          "npm:github-discussions-fetcher@0.7.4"
-        ]
-      },
       "packages/github-discussions-fetcher": {
         "packageJson": {
           "dependencies": [
