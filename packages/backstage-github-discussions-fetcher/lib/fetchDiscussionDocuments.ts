@@ -9,7 +9,7 @@ import {
   fetchGithubDiscussions,
   type GithubDiscussionFetcherResult,
   toAsyncIterable,
-} from 'npm:github-discussions-fetcher';
+} from '../../github-discussions-fetcher/mod.ts'; // 🚨
 import { FetchDiscussionDocumentsParams } from "../types.ts";
 
 export function fetchDiscussionDocuments(params: FetchDiscussionDocumentsParams) {
@@ -21,6 +21,7 @@ export function fetchDiscussionDocuments(params: FetchDiscussionDocumentsParams)
       try {
         yield* fetchGithubDiscussions({
           ...params,
+          cache: params.cache ?? new URL(`./.cache/`, import.meta.url), // 🚨
           results,
         });
       } catch (e) {
