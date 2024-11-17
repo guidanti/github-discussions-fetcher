@@ -31,7 +31,8 @@ await build({
       node: "18 || 20",
     },
     sideEffects: false,
-  },
+    dependencies: pkgJson.dependencies,
+  }
 });
 
 await Deno.copyFile("README.md", `${outDir}/README.md`);
