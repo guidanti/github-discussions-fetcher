@@ -2,5 +2,8 @@
   "tasks": {
     "dev": "deno run -A --unstable-sloppy-imports main.ts",
     "build:npm": "deno run -A ../../tasks/build-npm.ts"
+  },
+  "imports": {
+    "fetchGithubDiscussions": "npm:github-discussions-fetcher@0.7.4"
   }
 }

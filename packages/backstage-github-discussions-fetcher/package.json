@@ -1,0 +1,14 @@
+{
+  "name": "@guidanti/backstage-github-discussions-fetcher",
+  "version": "0.1.0",
+  "author": "Min Kim <min@guidanti.com>",
+  "license": "ISC",
+  "type": "module",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/guidanti/graphql-github-discussions.git"
+  },
+  "bugs": {
+    "url": "https://github.com/guidanti/graphql-github-discussions/issues"
+  }
+}

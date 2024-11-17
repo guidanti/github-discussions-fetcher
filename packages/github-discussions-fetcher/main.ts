@@ -19,7 +19,7 @@ if (import.meta.main) {
 
     assert(
       token,
-      "You need to have GITHUB_TOKEN configured in our local environment",
+      "You need to have GITHUB_TOKEN configured in your local environment",
     );
 
     const client = createGithubGraphqlClient({

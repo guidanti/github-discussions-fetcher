@@ -6,7 +6,7 @@ on:
       - main
 
 jobs:
-  publish-fetcher:
+  publish:
     runs-on: ubuntu-latest
     defaults:
       run:
@@ -39,5 +39,16 @@ jobs:
         run: npm publish --access=public
         continue-on-error: true
         working-directory: ./packages/github-discussions-fetcher/build/npm
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+
+      - name: Build Deno for NPM
+        run: deno task build:npm
+        working-directory: ./packages/backstage-github-discussions-fetcher
+
+      - name: Publish
+        run: npm publish --access=public
+        continue-on-error: true
+        working-directory: ./packages/backstage-github-discussions-fetcher/build/npm
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
