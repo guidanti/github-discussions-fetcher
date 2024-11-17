@@ -135,7 +135,12 @@
       "packages/backstage-github-discussions-fetcher": {
         "dependencies": [
           "npm:github-discussions-fetcher@0.7.4"
-        ]
+        ],
+        "packageJson": {
+          "dependencies": [
+            "npm:github-discussions-fetcher@~0.7.4"
+          ]
+        }
       },
       "packages/github-discussions-fetcher": {
         "packageJson": {
