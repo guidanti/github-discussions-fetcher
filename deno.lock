@@ -1,6 +1,7 @@
 {
   "version": "4",
   "specifiers": {
+    "jsr:@std/assert@*": "1.0.3",
     "jsr:@std/assert@1.0.3": "1.0.3",
     "jsr:@std/encoding@1": "1.0.5",
     "jsr:@std/fs@1.0.4": "1.0.4",
@@ -8,6 +9,7 @@
     "jsr:@std/path@1.0.6": "1.0.6",
     "jsr:@std/path@^1.0.6": "1.0.6",
     "jsr:@takker/md5@0.1.0": "0.1.0",
+    "npm:@changesets/cli@*": "2.27.9",
     "npm:@changesets/cli@^2.27.9": "2.27.9",
     "npm:@graphql-codegen/cli@4": "4.0.1_graphql@16.9.0_typescript@5.6.3_@types+node@22.9.0",
     "npm:@graphql-codegen/near-operation-file-preset@^2.4.1": "2.5.0_graphql@16.9.0",
@@ -3036,5 +3038,29 @@
   "remote": {
     "https://deno.land/std@0.138.0/bytes/bytes_list.ts": "67eb118e0b7891d2f389dad4add35856f4ad5faab46318ff99653456c23b025d",
     "https://deno.land/std@0.138.0/streams/delimiter.ts": "75595345f14eb268d2f5edfd20600c9956f61499a36697baabef8043897bc50b"
+  },
+  "workspace": {
+    "packageJson": {
+      "dependencies": [
+        "npm:@changesets/cli@^2.27.9"
+      ]
+    },
+    "members": {
+      "packages/github-discussions-fetcher": {
+        "packageJson": {
+          "dependencies": [
+            "npm:@graphql-codegen/cli@4",
+            "npm:@graphql-codegen/near-operation-file-preset@^2.4.1",
+            "npm:@graphql-codegen/typescript-document-nodes@4",
+            "npm:@graphql-codegen/typescript-operations@^2.5.3",
+            "npm:@graphql-codegen/typescript@4",
+            "npm:@octokit/graphql-schema@^11.1.0",
+            "npm:@octokit/graphql@^4.8.0",
+            "npm:@types/node@^22.7.4",
+            "npm:typescript@^5.6.2"
+          ]
+        }
+      }
+    }
   }
 }

@@ -2,5 +2,8 @@
   "nodeModulesDir": "auto",
   "workspace": [
     "./packages/github-discussions-fetcher"
-  ]
+  ],
+  "tasks": {
+    "changesets": "deno run -A npm:@changesets/cli"
+  }
 }
