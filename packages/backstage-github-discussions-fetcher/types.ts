@@ -1,4 +1,4 @@
-import type { GithubGraphqlClient } from 'npm:github-discussions-fetcher';
+import type { GithubGraphqlClient } from 'github-discussions-fetcher';
 
 export interface FetchDiscussionDocumentsParams {
   client: GithubGraphqlClient;

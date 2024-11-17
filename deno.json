@@ -1,6 +1,0 @@
-{
-  "nodeModulesDir": "auto",
-  "workspace": [
-    "./packages/github-discussions-fetcher"
-  ]
-}

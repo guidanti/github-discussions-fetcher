@@ -4,7 +4,7 @@ import {
   main,
   stream,
 } from "npm:effection@4.0.0-alpha.3";
-import { createGithubGraphqlClient } from "../github-discussions-fetcher/mod.ts"; // 🚨
+import { createGithubGraphqlClient } from "github-discussions-fetcher";
 import { fetchDiscussionDocuments } from './lib/fetchDiscussionDocuments.ts';
 
 if (import.meta.main) {
