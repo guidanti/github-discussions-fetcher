@@ -1,1 +1,2 @@
-export type { FetchDiscussionDocumentsParams } from './types.ts';
+export { fetchDiscussionDocuments } from './lib/fetchDiscussionDocuments.ts';
+export { createGithubGraphqlClient } from 'npm:github-discussions-fetcher';
