@@ -1,5 +1,6 @@
 {
   "tasks": {
-    "dev": "deno run -A --unstable-sloppy-imports main.ts"
+    "dev": "deno run -A --unstable-sloppy-imports main.ts",
+    "build:npm": "deno run -A ../../tasks/build-npm.ts"
   }
 }

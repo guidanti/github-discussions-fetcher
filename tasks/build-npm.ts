@@ -1,11 +1,13 @@
 import { build, emptyDir } from "jsr:@deno/dnt@0.41.3";
-import pkgJson from "../package.json" with { type: "json" };
 
-const outDir = "./build/npm";
+const packageDir = Deno.cwd();
+const outDir = `${packageDir}/build/npm`;
+const pkgJson = JSON.parse(await Deno.readTextFile(`${packageDir}/package.json`));
+
 await emptyDir(outDir);
 
 await build({
-  entryPoints: ["mod.ts"],
+  entryPoints: [`${packageDir}/mod.ts`],
   outDir,
   shims: {
     deno: true,
@@ -24,10 +26,10 @@ await build({
     author: pkgJson.author,
     repository: pkgJson.repository,
     bugs: pkgJson.bugs,
+    type: pkgJson.type,
     engines: {
       node: "18 || 20",
     },
-    type: "module",
     sideEffects: false,
   },
 });
