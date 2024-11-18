@@ -1,5 +1,11 @@
 # github-discussions-fetcher
 
+## 0.8.0
+
+### Minor Changes
+
+- 34de858: Replace channel with inline write operations
+
 ## 0.7.4
 
 ### Patch Changes
