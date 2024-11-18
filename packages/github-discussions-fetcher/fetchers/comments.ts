@@ -1,9 +1,9 @@
 import { type Operation } from "npm:effection@4.0.0-alpha.3";
 import { useGraphQL } from "../lib/useGraphQL.ts";
-import { useEntries } from "../lib/useEntries.ts";
 import { Cursor } from "../types.ts";
 import chalk from "npm:chalk@4.1.2";
 import { useLogger } from "../lib/useLogger.ts";
+import { writeComment } from "../lib/entries.ts";
 
 interface fetchCommentsOptions {
   incompleteComments: Cursor[];
@@ -14,7 +14,6 @@ export function* fetchComments({
   incompleteComments,
   first,
 }: fetchCommentsOptions): Operation<void> {
-  const entries = yield* useEntries();
   const graphql = yield* useGraphQL();
   const logger = yield* useLogger();
 
@@ -22,7 +21,12 @@ export function* fetchComments({
 
   while (cursors.length > 0) {
     logger.log(
-      `Batch querying ${chalk.blue(cursors.length, cursors.length > 1 ? "discussions" : "discussion")} for additional comments`,
+      `Batch querying ${
+        chalk.blue(
+          cursors.length,
+          cursors.length > 1 ? "discussions" : "discussion",
+        )
+      } for additional comments`,
     );
     const data: DiscussionsBatchQuery = yield* graphql(
       `query BatchedComments {
@@ -62,7 +66,7 @@ export function* fetchComments({
     );
 
     delete data.rateLimit;
-    cursors = []
+    cursors = [];
 
     let commentsCount = 0;
     for (const [_, discussion] of Object.entries(data)) {
@@ -77,7 +81,7 @@ export function* fetchComments({
         commentsCount += discussion.comments.nodes.length;
         for (const comment of discussion.comments.nodes) {
           if (comment?.author) {
-            yield* entries.send({
+            yield* writeComment({
               type: "comment",
               id: comment.id,
               bodyText: comment.bodyText,
@@ -86,16 +90,20 @@ export function* fetchComments({
             });
           } else {
             logger.log(
-              chalk.gray(`Skipped comment:${comment?.id} because author login is missing.`),
+              chalk.gray(
+                `Skipped comment:${comment?.id} because author login is missing.`,
+              ),
             );
           }
-        };
+        }
       }
     }
     logger.log(
-      `Retrieved ${chalk.blue(commentsCount, commentsCount > 1 ? "comments" : "comment")} from batch query`,
+      `Retrieved ${
+        chalk.blue(commentsCount, commentsCount > 1 ? "comments" : "comment")
+      } from batch query`,
     );
-  };
+  }
 }
 
 interface RateLimit {
@@ -121,8 +129,8 @@ type DiscussionsBatchQuery = {
         };
         discussion: {
           number: number;
-        }
+        };
       }[];
-    }
+    };
   } | null;
 } & RateLimit; // 🚨

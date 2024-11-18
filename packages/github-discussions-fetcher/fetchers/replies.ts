@@ -1,7 +1,7 @@
 import { each, type Operation } from "npm:effection@4.0.0-alpha.3";
 import { useGraphQL } from "../lib/useGraphQL.ts";
 import { useCache } from "../lib/useCache.ts";
-import { useEntries } from "../lib/useEntries.ts";
+import { writeReply } from "../lib/entries.ts";
 import { Comment, Cursor } from "../types.ts";
 import chalk from "npm:chalk@4.1.2";
 import { useLogger } from "../lib/useLogger.ts";
@@ -38,7 +38,7 @@ export function* fetchReplies({
   // fetched remaining cursors (assume it'll be less than 50)
   while (cursors.length > 0) {
     cursors = yield* fetchReplyCursors({ cursors, first });
-  };
+  }
 }
 
 interface RateLimit {
@@ -73,7 +73,6 @@ type CommentsBatchQuery = {
 function* fetchReplyCursors(
   { cursors, first }: { cursors: Cursor[]; first: number },
 ) {
-  const entries = yield* useEntries();
   const graphql = yield* useGraphQL();
   const logger = yield* useLogger();
 
@@ -130,7 +129,7 @@ function* fetchReplyCursors(
       }
       for (const reply of comment.replies.nodes) {
         if (reply?.author) {
-          yield* entries.send({
+          yield* writeReply({
             type: "reply",
             id: reply.id,
             bodyText: reply.bodyText,

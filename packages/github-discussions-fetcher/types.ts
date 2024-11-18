@@ -1,5 +1,5 @@
 export interface Comment {
-  type: "comment";
+  type: "comment",
   id: string;
   bodyText: string;
   author: string;
@@ -7,7 +7,7 @@ export interface Comment {
 }
 
 export interface Discussion {
-  type: "discussion";
+  type: "discussion"
   id: string;
   number: number;
   title: string;
@@ -22,7 +22,7 @@ export interface Discussion {
 }
 
 export interface Reply {
-  type: "reply";
+  type: "reply",
   id: string;
   bodyText: string;
   author: string;

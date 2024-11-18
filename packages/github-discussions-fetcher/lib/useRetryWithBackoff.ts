@@ -1,4 +1,9 @@
-import { createContext, Operation, race, sleep } from "npm:effection@4.0.0-alpha.3";
+import {
+  createContext,
+  Operation,
+  race,
+  sleep,
+} from "npm:effection@4.0.0-alpha.3";
 import { useLogger } from "./useLogger.ts";
 import { ensureContext } from "./ensureContext.ts";
 import moment from "npm:moment@2.30.1";
@@ -41,14 +46,16 @@ export function* useRetryWithBackoff<T>(
           );
         }
         return result;
-      } catch(e) {
+      } catch (e) {
         // https://aws.amazon.com/ru/blogs/architecture/exponential-backoff-and-jitter/
         const backoff = Math.pow(2, attempt) * 1000;
         const delayMs = Math.round((backoff * (1 + Math.random())) / 2);
-        
+
         logger.debug(e);
         logger.log(
-          `Operation[${_options.operationName}] failed, will retry in ${moment.duration(delayMs).humanize({ s: 1, m: 1 })}.`
+          `Operation[${_options.operationName}] failed, will retry in ${
+            moment.duration(delayMs).humanize({ s: 1, m: 1 })
+          }.`,
         );
 
         yield* sleep(delayMs);

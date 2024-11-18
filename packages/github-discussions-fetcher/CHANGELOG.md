@@ -4,14 +4,14 @@
 
 ### Patch Changes
 
-- 121ed20: Replace jsr:@std ensureFile with node fs and rearrange while loop to eliminate unnecessary trigger
+- 121ed20: Replace jsr:@std ensureFile with node fs and rearrange while loop to
+  eliminate unnecessary trigger
 
 ## 0.7.3
 
 ### Patch Changes
 
-- 27ceeb6: Fix bug in catch block of useCache
-  Revert ensureDir
+- 27ceeb6: Fix bug in catch block of useCache Revert ensureDir
 
 ## 0.7.2
 
@@ -41,14 +41,14 @@
 
 ### Minor Changes
 
-- 922db2c: Create option for clearing cache
-  Log error when retrying
+- 922db2c: Create option for clearing cache Log error when retrying
 
 ## 0.4.0
 
 ### Minor Changes
 
-- ffe5920: Output remaining seconds of timeout and display next attempt in seconds
+- ffe5920: Output remaining seconds of timeout and display next attempt in
+  seconds
 
 ## 0.3.0
 
@@ -94,4 +94,5 @@
 
 ### Minor Changes
 
-- 8ade079: Introduce github discussions fetcher that fetches all discussions with comments and replies
+- 8ade079: Introduce github discussions fetcher that fetches all discussions
+  with comments and replies
