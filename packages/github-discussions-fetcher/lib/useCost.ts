@@ -1,7 +1,4 @@
-import {
-  createContext,
-  Operation,
-} from "npm:effection@4.0.0-alpha.3";
+import { createContext, Operation } from "npm:effection@4.0.0-alpha.3";
 import { ensureContext } from "./ensureContext.ts";
 
 interface CostEntries {
@@ -30,7 +27,7 @@ class Cost implements CostTracker {
     cost: 0,
     remaining: 0,
     nodeCount: 0,
-  }
+  };
   public queryCount = 0;
   constructor() {}
 
@@ -57,7 +54,7 @@ export function* initCostContext() {
     return new Cost();
   }
 
-  return yield* ensureContext(CostContext, init())
+  return yield* ensureContext(CostContext, init());
 }
 
 export function* useCost(): Operation<Cost> {

@@ -27,13 +27,12 @@ import {
 import { type CostTracker, useCost } from "./useCost.ts";
 import { Logger, useLogger } from "./useLogger.ts";
 
-export const GraphQLContext =
-  createContext<
-    <ResponseData>(
-      query: string,
-      parameters?: RequestParameters,
-    ) => Operation<ResponseData>
-  >("graphql");
+export const GraphQLContext = createContext<
+  <ResponseData>(
+    query: string,
+    parameters?: RequestParameters,
+  ) => Operation<ResponseData>
+>("graphql");
 
 interface InitGraphQLContextOptions {
   client: GithubGraphqlClient;
@@ -70,10 +69,12 @@ export function* initGraphQLContext({
   return yield* GraphQLContext.set(fetchGithubGraphql);
 }
 
-export function* useGraphQL(): Operation<<ResponseData>(
-  query: string,
-  parameters?: RequestParameters,
-) => Operation<ResponseData>> {
+export function* useGraphQL(): Operation<
+  <ResponseData>(
+    query: string,
+    parameters?: RequestParameters,
+  ) => Operation<ResponseData>
+> {
   return yield* GraphQLContext.expect();
 }
 
@@ -95,9 +96,11 @@ function createFetchGithubGraphql({
     parameters: RequestParameters = {},
   ): Operation<ResponseData> {
     const operationName = getOperationName(parse(query));
-    const key = `${encodeHex(md5(query))}-${Object.keys(parameters)
-      .map((p) => `${p}:${parameters[p]}`)
-      .join("-")}`;
+    const key = `${encodeHex(md5(query))}-${
+      Object.keys(parameters)
+        .map((p) => `${p}:${parameters[p]}`)
+        .join("-")
+    }`;
 
     if (yield* cache.has(key)) {
       for (const data of yield* each(yield* cache.read<ResponseData>(key))) {
@@ -123,13 +126,11 @@ function createFetchGithubGraphql({
       // @ts-expect-error Property 'rateLimit' does not exist on type 'NonNullable<ResponseData>'.
       if (data?.rateLimit) {
         logger.info(
-          `GitHub API Query ${operationName} with ${
-            JSON.stringify(parameters)
+          `GitHub API Query ${operationName} with ${JSON.stringify(parameters)
             // @ts-expect-error Property 'rateLimit' does not exist on type 'NonNullable<ResponseData>'.
           } ${chalk.green("cost", data.rateLimit.cost)} and ${
             // @ts-expect-error Property 'rateLimit' does not exist on type 'NonNullable<ResponseData>'.
-            chalk.green("remaining", data.rateLimit.remaining)
-          }`,
+            chalk.green("remaining", data.rateLimit.remaining)}`,
         );
         cost.update({
           // @ts-expect-error Property 'rateLimit' does not exist on type 'NonNullable<ResponseData>'.deno-ts(2339)
@@ -185,18 +186,20 @@ export function createGithubGraphqlClient({
           variables,
         }),
         signal,
-      }),
+      })
     );
     if (response.ok) {
       const payload = yield* call<GraphQlQueryResponse<ResponseData>>(() =>
-        response.json(),
+        response.json()
       );
       if (payload.errors) {
         for (const error of payload.errors ?? []) {
           logger.error(
-            `${getOperationName(parse(query))} with ${JSON.stringify(
-              variables,
-            )} encountered an error ${JSON.stringify(error)}`,
+            `${getOperationName(parse(query))} with ${
+              JSON.stringify(
+                variables,
+              )
+            } encountered an error ${JSON.stringify(error)}`,
           );
         }
       }

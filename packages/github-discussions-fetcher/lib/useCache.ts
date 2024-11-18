@@ -1,34 +1,42 @@
-import { exists, walk, emptyDir } from "jsr:@std/fs@1.0.4";
+import { emptyDir, exists, walk } from "jsr:@std/fs@1.0.4";
 import { basename, dirname, globToRegExp, join } from "jsr:@std/path@1.0.6";
 import {
   call,
   createContext,
   createQueue,
+  each,
   type Operation,
   spawn,
   type Stream,
   stream,
-  each,
 } from "npm:effection@4.0.0-alpha.3";
-import fs from 'node:fs';
-import { promisify } from 'node:util';
+import fs from "node:fs";
+import { promisify } from "node:util";
 
 import { ensureContext } from "./ensureContext.ts";
-import { JSONLinesParseStream } from './jsonlines/parser.ts';
+import { JSONLinesParseStream } from "./jsonlines/parser.ts";
 
-function* mkdir(path: fs.PathLike, options: fs.MakeDirectoryOptions & {
-  recursive: true;
-}): Operation<string | undefined> {
+function* mkdir(
+  path: fs.PathLike,
+  options: fs.MakeDirectoryOptions & {
+    recursive: true;
+  },
+): Operation<string | undefined> {
   return yield* call(() => promisify(fs.mkdir)(path, options));
 }
 
-function* writeFile(file: fs.PathOrFileDescriptor,
+function* writeFile(
+  file: fs.PathOrFileDescriptor,
   data: string | NodeJS.ArrayBufferView,
-  options?: fs.WriteFileOptions): Operation<void> {
+  options?: fs.WriteFileOptions,
+): Operation<void> {
   return yield* call(() => promisify(fs.writeFile)(file, data, options));
 }
 
-function* stat(path: fs.PathLike, options?: fs.StatOptions): Operation<fs.Stats | fs.BigIntStats> {
+function* stat(
+  path: fs.PathLike,
+  options?: fs.StatOptions,
+): Operation<fs.Stats | fs.BigIntStats> {
   return yield* call(() => promisify(fs.stat)(path, options));
 }
 
@@ -52,7 +60,7 @@ export function* initCacheContext(options: InitCacheContextOptions) {
   function* init() {
     return new PersistantCache(options.location);
   }
-  
+
   return yield* ensureContext(CacheContext, init());
 }
 
@@ -61,7 +69,7 @@ export function* useCache(): Operation<Cache> {
 }
 
 export function createPersistentCache(options: InitCacheContextOptions): Cache {
-  return new PersistantCache(options.location)
+  return new PersistantCache(options.location);
 }
 
 class PersistantCache implements Cache {
@@ -75,7 +83,7 @@ class PersistantCache implements Cache {
         return await exists(location);
       } catch {
         return false;
-      };
+      }
     });
   }
 
@@ -95,7 +103,7 @@ class PersistantCache implements Cache {
     const location = new URL(`./${key}.jsonl`, this.location);
 
     yield* mkdir(dirname(location.pathname), { recursive: true });
-    
+
     try {
       yield* stat(location.pathname);
     } catch {

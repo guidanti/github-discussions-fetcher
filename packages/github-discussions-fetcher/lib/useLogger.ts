@@ -8,12 +8,11 @@ export const LoggerContext = createContext<Console>(
 );
 
 export function* initLoggerContext(logger: Console): Operation<Console> {
-
   // deno-lint-ignore require-yield
   function* init(): Operation<Logger> {
     return logger;
   }
-  
+
   return yield* ensureContext(
     LoggerContext,
     init(),

@@ -1,7 +1,7 @@
 import { assert } from "jsr:@std/assert@1.0.3";
-import type { Operation } from "npm:effection@4.0.0-alpha.3";
+import { type Operation } from "npm:effection@4.0.0-alpha.3";
 import type { DiscussionsQuery } from "../__generated__/types.ts";
-import { useEntries } from "../lib/useEntries.ts";
+import { writeComment, writeDiscussion } from "../lib/entries.ts";
 import { useGraphQL } from "../lib/useGraphQL.ts";
 import type { Cursor, CURSOR_VALUE } from "../types.ts";
 import chalk from "npm:chalk@4.1.2";
@@ -18,7 +18,6 @@ export function* fetchDiscussions({
   repo,
   first,
 }: fetchDiscussionOptions): Operation<Cursor[]> {
-  const entries = yield* useEntries();
   const graphql = yield* useGraphQL();
   const logger = yield* useLogger();
 
@@ -49,10 +48,14 @@ export function* fetchDiscussions({
     assert(data.repository, `Could not fetch ${org}/${repo}`);
 
     logger.log(
-      `Fetched ${chalk.blue(progress += data.repository.discussions.nodes?.length ??
-        0)} of ${chalk.blue(data.repository.discussions.totalCount)} discussions for ${
-        JSON.stringify(parameters)
-      }`,
+      `Fetched ${
+        chalk.blue(
+          progress += data.repository.discussions.nodes?.length ??
+            0,
+        )
+      } of ${
+        chalk.blue(data.repository.discussions.totalCount)
+      } discussions for ${JSON.stringify(parameters)}`,
     );
     for (const discussion of data.repository.discussions.nodes ?? []) {
       if (discussion) {
@@ -68,8 +71,9 @@ export function* fetchDiscussions({
                 }
               }
               return acc;
-            }, [] as { name: string, color: string }[]): [];
-          yield* entries.send({
+            }, [] as { name: string; color: string }[])
+            : [];
+          yield* writeDiscussion({
             type: "discussion",
             id: discussion.id,
             number: discussion.number,
@@ -82,7 +86,9 @@ export function* fetchDiscussions({
           });
         } else {
           logger.log(
-            chalk.gray(`Skipped discussion:${discussion.number} because author login is missing.`),
+            chalk.gray(
+              `Skipped discussion:${discussion.number} because author login is missing.`,
+            ),
           );
         }
         if (discussion.comments.pageInfo.hasNextPage) {
@@ -94,7 +100,7 @@ export function* fetchDiscussions({
         }
         for (const comment of discussion?.comments.nodes ?? []) {
           if (comment?.author) {
-            yield* entries.send({
+            yield* writeComment({
               type: "comment",
               id: comment.id,
               bodyText: comment.bodyText,
@@ -103,7 +109,9 @@ export function* fetchDiscussions({
             });
           } else {
             logger.log(
-              chalk.gray(`Skipped comment:${comment?.id} because author login is missing.`),
+              chalk.gray(
+                `Skipped comment:${comment?.id} because author login is missing.`,
+              ),
             );
           }
         }

@@ -1,6 +1,9 @@
-import type { Scope, Queue } from "npm:effection@4.0.0-alpha.3";
+import type { Queue, Scope } from "npm:effection@4.0.0-alpha.3";
 
-export function toAsyncIterable<T>(queue: Queue<T, unknown>, scope: Scope): AsyncIterable<T> {
+export function toAsyncIterable<T>(
+  queue: Queue<T, unknown>,
+  scope: Scope,
+): AsyncIterable<T> {
   return {
     async *[Symbol.asyncIterator]() {
       let next = await scope.run(queue.next);
@@ -14,6 +17,6 @@ export function toAsyncIterable<T>(queue: Queue<T, unknown>, scope: Scope): Asyn
         next = await scope.run(queue.next);
       }
       return next.value;
-    }
-  }
+    },
+  };
 }
