@@ -6,7 +6,7 @@ import {
 } from "npm:effection@4.0.0-alpha.3";
 import { useLogger } from "./useLogger.ts";
 import { ensureContext } from "./ensureContext.ts";
-import moment from "npm:moment@2.30.1";
+import prettyMilliseconds from "npm:pretty-ms@9.2.0";
 
 interface UseRetryBackoffOptions {
   timeout?: number;
@@ -51,10 +51,10 @@ export function* useRetryWithBackoff<T>(
         const backoff = Math.pow(2, attempt) * 1000;
         const delayMs = Math.round((backoff * (1 + Math.random())) / 2);
 
-        logger.debug(e);
+        // logger.debug(e);
         logger.log(
           `Operation[${_options.operationName}] failed, will retry in ${
-            moment.duration(delayMs).humanize({ s: 1, m: 1 })
+            prettyMilliseconds(delayMs)
           }.`,
         );
 
