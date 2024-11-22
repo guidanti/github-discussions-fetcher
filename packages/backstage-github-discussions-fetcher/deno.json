@@ -4,6 +4,6 @@
     "build:npm": "deno run -A ../../tasks/build-npm.ts"
   },
   "imports": {
-    "fetchGithubDiscussions": "npm:github-discussions-fetcher@0.7.4"
+    "fetchGithubDiscussions": "npm:github-discussions-fetcher@*"
   }
 }
