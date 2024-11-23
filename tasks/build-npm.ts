@@ -3,6 +3,27 @@ import { build, emptyDir } from "jsr:@deno/dnt@0.41.3";
 const packageDir = Deno.cwd();
 const outDir = `${packageDir}/build/npm`;
 const pkgJson = JSON.parse(await Deno.readTextFile(`${packageDir}/package.json`));
+const { workspaces } = JSON.parse(await Deno.readTextFile(`${packageDir}/../../package.json`));
+
+const pkgJsons = await Promise.all(
+  workspaces.map(
+    (packagePath: string) =>
+      import(`../${packagePath}/package.json`, { with: { type: "json" } })
+  )
+);
+
+const packages = Object.fromEntries(
+  pkgJsons.map(({ default: pkg }) => [ pkg.name, pkg.version ])
+);
+
+const dependencies = Object.entries(pkgJson.dependencies).map(([dependency, version]) => {
+  if (version === "*") {
+    if (dependency in packages) {
+      return [dependency, packages[dependency]];
+    }
+  }
+  return [dependency, version];
+});
 
 await emptyDir(outDir);
 
@@ -31,7 +52,7 @@ await build({
       node: "18 || 20",
     },
     sideEffects: false,
-    dependencies: pkgJson.dependencies,
+    dependencies,
   }
 });
 

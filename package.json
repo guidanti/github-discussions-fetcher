@@ -6,6 +6,7 @@
     "@changesets/cli": "^2.27.9"
   },
   "workspaces": [
-    "packages/*"
+    "packages/backstage-github-discussions-fetcher",
+    "packages/github-discussions-fetcher"
   ]
 }

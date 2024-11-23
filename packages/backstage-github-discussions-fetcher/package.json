@@ -12,6 +12,6 @@
     "url": "https://github.com/guidanti/graphql-github-discussions/issues"
   },
   "dependencies": {
-    "github-discussions-fetcher": "workspace:*"
+    "github-discussions-fetcher": "*"
   }
 }
