@@ -1,5 +1,11 @@
 # github-discussions-fetcher
 
+## 0.9.0
+
+### Minor Changes
+
+- 452b774: Prettify message for retries
+
 ## 0.8.0
 
 ### Minor Changes

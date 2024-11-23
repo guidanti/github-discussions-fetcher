@@ -1,5 +1,16 @@
 # @guidanti/backstage-github-discussions-fetcher
 
+## 0.5.0
+
+### Minor Changes
+
+- 452b774: Prettify message for retries
+
+### Patch Changes
+
+- Updated dependencies [452b774]
+  - github-discussions-fetcher@0.9.0
+
 ## 0.4.0
 
 ### Minor Changes
