@@ -16,14 +16,14 @@ const packages = Object.fromEntries(
   pkgJsons.map(({ default: pkg }) => [ pkg.name, pkg.version ])
 );
 
-const dependencies = Object.entries(pkgJson.dependencies).map(([dependency, version]) => {
+const dependencies = Object.fromEntries(Object.entries(pkgJson.dependencies).map(([dependency, version]) => {
   if (version === "*") {
     if (dependency in packages) {
       return [dependency, packages[dependency]];
     }
   }
   return [dependency, version];
-});
+}));
 
 await emptyDir(outDir);
 
