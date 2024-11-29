@@ -36,11 +36,14 @@
     "npm:@graphql-codegen/typescript@4": "4.1.1_graphql@16.8.2",
     "npm:@octokit/graphql-schema@^11.1.0": "11.2.0_graphql@16.8.2",
     "npm:@octokit/graphql@^4.8.0": "4.8.0",
+    "npm:@octokit/types@13.6.1": "13.6.1",
     "npm:@types/node@*": "22.5.4",
     "npm:@types/node@^22.7.4": "22.9.0",
     "npm:byte-size@9.0.0": "9.0.0",
     "npm:chalk@4.1.2": "4.1.2",
+    "npm:effection@4.0.0-alpha.3": "4.0.0-alpha.3",
     "npm:graphql@16.8.2": "16.8.2",
+    "npm:pretty-ms@7.0.1": "7.0.1",
     "npm:pretty-ms@9.2.0": "9.2.0",
     "npm:typescript@^5.6.2": "5.6.3"
   },
@@ -1347,7 +1350,7 @@
     "@octokit/endpoint@6.0.12": {
       "integrity": "sha512-lF3puPwkQWGfkMClXb4k/eUT/nZKQfxinRWJrdZaJO85Dqwo/G0yOC434Jr2ojwafWJMYqFGFa5ms4jJUgujdA==",
       "dependencies": [
-        "@octokit/types",
+        "@octokit/types@6.41.0",
         "is-plain-object",
         "universal-user-agent"
       ]
@@ -1363,17 +1366,20 @@
       "integrity": "sha512-0gv+qLSBLKF0z8TKaSKTsS39scVKF9dbMxJpj3U0vC7wjNWFuIpL/z76Qe2fiuCbDRcJSavkXsVtMS6/dtQQsg==",
       "dependencies": [
         "@octokit/request",
-        "@octokit/types",
+        "@octokit/types@6.41.0",
         "universal-user-agent"
       ]
     },
     "@octokit/openapi-types@12.11.0": {
       "integrity": "sha512-VsXyi8peyRq9PqIz/tpqiL2w3w80OgVMwBHltTml3LmVvXiphgeqmY9mvBw9Wu7e0QWk/fqD37ux8yP5uVekyQ=="
     },
+    "@octokit/openapi-types@22.2.0": {
+      "integrity": "sha512-QBhVjcUa9W7Wwhm6DBFu6ZZ+1/t/oYxqc2tp81Pi41YNuJinbFRx8B133qVOrAaBbF7D/m0Et6f9/pZt9Rc+tg=="
+    },
     "@octokit/request-error@2.1.0": {
       "integrity": "sha512-1VIvgXxs9WHSjicsRwq8PlR2LR2x6DwsJAaFgzdi0JfJoGSO8mYI/cHJQ+9FbN21aa+DrgNLnwObmyeSC8Rmpg==",
       "dependencies": [
-        "@octokit/types",
+        "@octokit/types@6.41.0",
         "deprecation",
         "once"
       ]
@@ -1383,16 +1389,22 @@
       "dependencies": [
         "@octokit/endpoint",
         "@octokit/request-error",
-        "@octokit/types",
+        "@octokit/types@6.41.0",
         "is-plain-object",
         "node-fetch",
         "universal-user-agent"
       ]
     },
+    "@octokit/types@13.6.1": {
+      "integrity": "sha512-PHZE9Z+kWXb23Ndik8MKPirBPziOc0D2/3KH1P+6jK5nGWe96kadZuE4jev2/Jq7FvIfTlT2Ltg8Fv2x1v0a5g==",
+      "dependencies": [
+        "@octokit/openapi-types@22.2.0"
+      ]
+    },
     "@octokit/types@6.41.0": {
       "integrity": "sha512-eJ2jbzjdijiL3B4PrSQaSjuF2sPEQPVCPzBvTHJD9Nz+9dw2SGH4K4xeQJ77YfTq5bRQ+bD8wT11JbeDPmxmGg==",
       "dependencies": [
-        "@octokit/openapi-types"
+        "@octokit/openapi-types@12.11.0"
       ]
     },
     "@parcel/watcher-android-arm64@2.5.0": {
@@ -1947,6 +1959,9 @@
     },
     "dset@3.1.4": {
       "integrity": "sha512-2QF/g9/zTaPDc3BjNcVTGoBbXBgYfMTTceLaYcFJ/W9kggFUkhxD/hMEeuLKbugyef9SqAx8cpgwlIP/jinUTA=="
+    },
+    "effection@4.0.0-alpha.3": {
+      "integrity": "sha512-GIzNiia4UFKBbKSv4ElWk1XpSp/8iKGBmz1Yud1XkGtJfKQD9tNLk4Me9OqYlhUW6jUTzJuAqFvylc88wLGqeg=="
     },
     "electron-to-chromium@1.5.62": {
       "integrity": "sha512-t8c+zLmJHa9dJy96yBZRXGQYoiCEnHYgFwn1asvSPZSUdVxnB62A4RASd7k41ytG3ErFBA0TpHlKg9D9SQBmLg=="
@@ -2628,6 +2643,9 @@
         "lines-and-columns"
       ]
     },
+    "parse-ms@2.1.0": {
+      "integrity": "sha512-kHt7kzLoS9VBZfUsiKjv43mr91ea+U05EyKkEtqp7vNbHxmaVuEqN7XxeEVnGrMtYOAxGrDElSi96K7EgO1zCA=="
+    },
     "parse-ms@4.0.0": {
       "integrity": "sha512-TXfryirbmq34y8QBwgqCVLi+8oA3oWx2eAnSn62ITyEhEYaWRlVZ2DvMM9eZbMs/RfxPu/PK/aBLyGj4IrqMHw=="
     },
@@ -2675,10 +2693,16 @@
     "prettier@2.8.8": {
       "integrity": "sha512-tdN8qQGvNjw4CHbY+XXk0JgCXn9QiF21a55rBe5LJAU+kDyC4WQn4+awm2Xfk2lQMk5fKup9XgzTZtGkjBdP9Q=="
     },
+    "pretty-ms@7.0.1": {
+      "integrity": "sha512-973driJZvxiGOQ5ONsFhOF/DtzPMOMtgC11kCpUrPGMTgqp2q/1gwzCquocrN33is0VZ5GFHXZYMM9l6h67v2Q==",
+      "dependencies": [
+        "parse-ms@2.1.0"
+      ]
+    },
     "pretty-ms@9.2.0": {
       "integrity": "sha512-4yf0QO/sllf/1zbZWYnvWw3NxCQwLXKzIj0G849LSufP15BXKM0rbD2Z3wVnkMfjdn/CB0Dpp444gYAACdsplg==",
       "dependencies": [
-        "parse-ms"
+        "parse-ms@4.0.0"
       ]
     },
     "promise@7.3.1": {
