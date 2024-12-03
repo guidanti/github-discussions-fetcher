@@ -6,7 +6,7 @@ import {
 } from "npm:effection@4.0.0-alpha.3";
 import { useLogger } from "./useLogger.ts";
 import { ensureContext } from "./ensureContext.ts";
-import prettyMilliseconds from "npm:pretty-ms@9.2.0";
+import prettyMilliseconds from "npm:pretty-ms@7.0.1";
 
 interface UseRetryBackoffOptions {
   timeout?: number;
