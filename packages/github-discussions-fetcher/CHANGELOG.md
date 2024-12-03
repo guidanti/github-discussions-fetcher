@@ -1,5 +1,11 @@
 # github-discussions-fetcher
 
+## 0.10.0
+
+### Minor Changes
+
+- daa6a65: Downgrade pretty-ms to 7.0.1
+
 ## 0.9.0
 
 ### Minor Changes

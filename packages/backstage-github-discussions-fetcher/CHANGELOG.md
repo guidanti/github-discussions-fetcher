@@ -1,5 +1,16 @@
 # @guidanti/backstage-github-discussions-fetcher
 
+## 0.6.0
+
+### Minor Changes
+
+- daa6a65: Bump fetcher to 0.10.0
+
+### Patch Changes
+
+- Updated dependencies [daa6a65]
+  - github-discussions-fetcher@0.10.0
+
 ## 0.5.0
 
 ### Minor Changes
